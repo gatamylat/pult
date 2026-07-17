@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Пульт">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#F4EEE5">
+<title>Пульт · объекты производства</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E▦%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════
+   ЛАТИМЕР v2 · запаянный сосуд, срок, двое внутри — и микрокосм
+   Родословная: «Автономный Клод» × «Организм»
+   Оболочка: дизайн-система «Поток смены»
+   ════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:0;display:none}
+
+:root{
+--bg:#F4EEE5;--surf:#FCF7F0;--panel:#241206;
+--ink:#26190E;--t2:#7A6A59;--t3:#AD9D8A;
+--line:rgba(56,34,15,.08);--line-2:rgba(56,34,15,.15);
+--acc:#B85C1E;--acc-soft:rgba(184,92,30,.08);
+--green:#3C9A6A;--amber:#C68A2E;--rose:#C0566C;--violet:#7B6BB0;--teal:#3A8E94;
+--sans:'DM Sans',-apple-system,system-ui,sans-serif;
+--serif:'Playfair Display',Georgia,serif;
+--mono:'JetBrains Mono',ui-monospace,monospace;
+--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+background-image:linear-gradient(rgba(56,34,15,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,34,15,.025) 1px,transparent 1px);
+background-size:26px 26px}
+
+.app{position:relative;z-index:1;width:100%;max-width:580px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-top:var(--st)}
+
+.scanline{position:fixed;top:0;left:0;right:0;height:1px;z-index:80;pointer-events:none;
+background:linear-gradient(90deg,transparent,rgba(184,92,30,.22),transparent);animation:scan 6s linear infinite}
+@keyframes scan{0%{transform:translateY(-4px);opacity:0}10%{opacity:1}100%{transform:translateY(100vh);opacity:.4}}
+@media (prefers-reduced-motion:reduce){.scanline{display:none}.entry{animation:none!important}.orb::after{animation:none}}
+
+/* ── header ── */
+.hdr{padding:30px 24px 14px}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.hdr-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.hdr-title{font-family:var(--serif);font-style:italic;font-weight:500;font-size:30px;line-height:.92;color:#F25C05;letter-spacing:-.015em}
+.hdr-status{font-family:var(--mono);font-size:10px;color:var(--t3);margin-top:11px;letter-spacing:.4px}
+.hdr-status b{color:var(--green);font-weight:500}
+.hdr-status b.warn{color:var(--amber)}
+.hdr-status b.dead{color:var(--t3)}
+.hdr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.ibtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:background .18s,transform .1s;font-family:var(--mono);font-size:13px}
+.ibtn:active{transform:scale(.92)}
+.ibtn:hover{background:rgba(56,34,15,.04)}
+
+.orb{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line-2);position:relative;flex-shrink:0}
+.orb::after{content:'';position:absolute;inset:9px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(184,92,30,.5),rgba(58,142,148,.32) 65%,transparent);animation:breathe 5s ease-in-out infinite}
+.orb.dead::after{animation:none;opacity:.25}
+@keyframes breathe{0%,100%{transform:scale(.82);opacity:.55}50%{transform:scale(1);opacity:.95}}
+
+.divider{height:1px;background:var(--line);margin:0 24px}
+
+/* возвращающийся хэдер: всплывает при скролле вверх */
+.tophdr{position:fixed;top:0;left:50%;transform:translate(-50%,-110%);width:100%;max-width:580px;z-index:95;
+background:rgba(244,238,229,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:8px;
+padding:calc(8px + var(--st)) 16px 8px;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+.tophdr.on{transform:translate(-50%,0)}
+.tophdr .tt{font-family:var(--serif);font-style:italic;font-size:16px;color:#F25C05}
+.tophdr .ts{font-family:var(--mono);font-size:9px;color:var(--t3);margin-right:auto;margin-left:4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tophdr .ibtn{width:32px;height:32px;font-size:12px;flex-shrink:0}
+@media(min-width:1000px){.tophdr{max-width:1200px}}
+
+/* ── setup ── */
+.setup{padding:8px 24px 170px}
+.f-label{font-family:var(--mono);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);margin:22px 0 9px}
+.f-note{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--t2);line-height:1.5;margin-top:7px}
+textarea{width:100%;background:var(--surf);border:1px solid var(--line-2);border-radius:12px;padding:13px 15px;font-family:var(--sans);font-size:14px;line-height:1.55;color:var(--ink);resize:vertical;min-height:110px}
+textarea:focus{outline:none;border-color:var(--acc)}
+textarea.mini{min-height:76px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:var(--t3);padding:8px 15px;border:1px solid var(--line-2);border-radius:100px;background:transparent;cursor:pointer;white-space:nowrap;transition:all .18s}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:not(.on):hover{border-color:var(--t2);color:var(--t2)}
+.budget-card{margin-top:14px;padding:15px 17px;background:var(--acc-soft);border:1px solid rgba(184,92,30,.18);border-radius:12px}
+.budget-card .b-line{font-family:var(--mono);font-size:11px;color:var(--ink);letter-spacing:.3px;line-height:1.9;font-variant-numeric:tabular-nums}
+.budget-card .b-line b{color:var(--acc);font-weight:500}
+.budget-card .b-fine{font-family:var(--mono);font-size:9px;color:var(--t3);margin-top:8px;line-height:1.7;letter-spacing:.3px}
+
+/* ── микрокосм: живой дом в интерфейсе ── */
+.world{margin:14px 24px 4px;border:1px solid var(--line-2);border-radius:14px;overflow:hidden;background:var(--surf)}
+.world-head{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;user-select:none}
+.world-head .wt{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:500}
+.world-head .wm{font-family:var(--mono);font-size:9px;color:var(--t3);margin-left:auto;font-variant-numeric:tabular-nums}
+.world-head .wtoggle{font-family:var(--mono);font-size:11px;color:var(--t3)}
+.world-frame{width:100%;height:190px;border:0;border-top:1px solid var(--line);background:#fff;display:block}
+.world.closed .world-frame{display:none}
+
+/* ── feed ── */
+.feed{padding:16px 24px 0}
+.entry{display:flex;gap:16px;margin-bottom:20px;animation:rise .5s cubic-bezier(.22,1,.36,1) both}
+#feed.noanim .entry{animation:none}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rail{display:flex;flex-direction:column;align-items:center;width:34px;flex-shrink:0}
+.node{width:34px;height:34px;border-radius:50%;border:1.5px solid currentColor;background:var(--surf);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+#feed.live .entry:last-child .node{animation:npulse 1.4s ease-in-out infinite}
+@keyframes npulse{0%,100%{box-shadow:0 0 0 0 rgba(184,92,30,0)}50%{box-shadow:0 0 0 6px rgba(184,92,30,.10)}}
+.thread{width:1px;flex:1;min-height:16px;background:var(--line-2);margin-top:8px}
+.entry:last-child .thread{display:none}
+.body{flex:1;min-width:0;padding-top:4px}
+.meta{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.tag{font-family:var(--mono);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500}
+.time{font-family:var(--mono);font-size:9px;color:var(--t3);font-variant-numeric:tabular-nums}
+.kind{font-family:var(--mono);font-size:9px;color:var(--t3);margin-left:auto;letter-spacing:.6px;text-transform:uppercase}
+.txt{font-size:14px;color:var(--ink);line-height:1.5;letter-spacing:-.003em;white-space:pre-wrap;word-break:break-word}
+.txt.diary{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--t2);line-height:1.6}
+.txt.sys{font-family:var(--mono);font-size:11px;color:var(--t3)}
+.txt.voice{font-family:var(--mono);font-size:12px;color:var(--teal)}
+.txt.ask{border-left:2px solid var(--amber);padding-left:10px}
+.codechip{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--acc);border:1px solid rgba(184,92,30,.28);border-radius:8px;padding:7px 12px;cursor:pointer;background:var(--acc-soft)}
+.codechip:active{opacity:.6}
+.verdict{margin-top:8px;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--rose)}
+
+/* ── controls ── */
+.controls{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:580px;z-index:50}
+.fade{height:48px;background:linear-gradient(transparent,#2E1808)}
+.bar{background:linear-gradient(180deg,#2E1808 0%,#1E0D04 100%);padding:15px 24px calc(19px + var(--sb))}
+.bar-in{display:flex;align-items:center;justify-content:space-between;gap:11px;width:100%;max-width:1152px;margin:0 auto}
+.bar-info{font-family:var(--mono);font-size:10px;color:#8A7159;letter-spacing:.5px;line-height:1.75}
+.bar-info b{color:#EAC59B;font-weight:500;font-variant-numeric:tabular-nums}
+.bar-btns{display:flex;gap:9px}
+.bbtn{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:11px 16px;border-radius:7px;border:1px solid #BA8A55;color:#EAC59B;background:transparent;cursor:pointer;transition:all .15s}
+.bbtn:active{transform:scale(.97)}
+.bbtn:hover{background:rgba(186,138,85,.16)}
+.bbtn.solid{background:#F25C05;color:#FFF4EA;border-color:#F25C05;box-shadow:0 4px 18px rgba(242,92,5,.35)}
+
+/* ── десктоп: лента + постоянный микрокосм ── */
+@media(min-width:1000px){
+  .app{max-width:1200px}
+  .split{display:flex;align-items:flex-start}
+  .lane{flex:0 0 580px;border-right:1px solid var(--line);min-height:calc(100vh - 140px)}
+  .world{flex:1;position:sticky;top:18px;margin:18px 28px 0 28px;order:2}
+  .world .world-frame{height:calc(100vh - 210px)}
+  .world.closed .world-frame{display:block}
+  .world-head{cursor:default}
+  .world-head .wtoggle{display:none}
+  .controls{left:0;transform:none;max-width:none}
+}
+
+/* ── reveal ── */
+.reveal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:22px;pointer-events:none;opacity:0;transition:opacity .35s}
+.reveal.on{opacity:1;pointer-events:all}
+.reveal-bg{position:absolute;inset:0;background:rgba(56,38,22,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.reveal-card{position:relative;width:100%;max-width:460px;background:var(--surf);border-radius:22px;border:1px solid var(--line-2);
+padding:28px 24px 24px;box-shadow:0 30px 80px rgba(30,16,5,.32);display:flex;flex-direction:column;gap:14px;
+transform:scale(.93) translateY(16px);transition:transform .45s cubic-bezier(.22,1,.36,1);max-height:86vh;overflow-y:auto}
+.reveal.on .reveal-card{transform:scale(1) translateY(0)}
+.reveal-role{display:inline-flex;align-items:center;gap:9px}
+.reveal-role .d{width:8px;height:8px;border-radius:50%}
+.reveal-role .n{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+.reveal-title{font-family:var(--serif);font-style:italic;font-weight:500;font-size:21px;line-height:1.35;color:var(--ink)}
+.reveal-ai{font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.6;color:var(--ink);padding:15px 17px;background:var(--acc-soft);border:1px solid rgba(184,92,30,.18);border-radius:12px;white-space:pre-wrap}
+pre.code{font-family:var(--mono);font-size:10.5px;line-height:1.55;color:var(--ink);background:rgba(56,34,15,.05);border:1px solid var(--line-2);border-radius:11px;padding:14px;overflow-x:auto;white-space:pre;max-height:46vh}
+.reveal-src{font-family:var(--mono);font-size:10px;color:var(--t3);line-height:1.6;padding-top:12px;border-top:1px solid var(--line);letter-spacing:.3px}
+.reveal-hint{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);text-align:center;opacity:.55}
+
+/* ── sheet ── */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(56,38,22,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.on{opacity:1;pointer-events:all}
+.sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(102%);width:100%;max-width:580px;z-index:210;background:var(--surf);border-radius:22px 22px 0 0;border-top:1px solid var(--line-2);transition:transform .4s cubic-bezier(.22,1,.36,1);padding-bottom:var(--sb);max-height:88vh;overflow-y:auto}
+.sheet.on{transform:translateX(-50%) translateY(0)}
+.grip{width:32px;height:4px;background:var(--line-2);border-radius:2px;margin:12px auto 0}
+.sheet-body{padding:20px 26px 32px}
+.sheet-title{font-family:var(--serif);font-style:italic;font-weight:500;font-size:24px;color:var(--ink);margin-bottom:5px;letter-spacing:-.01em}
+.sheet-sub{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:20px}
+.prose{font-size:15px;color:var(--t2);line-height:1.65;white-space:pre-wrap}
+.house-frame{width:100%;height:56vh;border:1px solid var(--line-2);border-radius:12px;background:#fff}
+.vrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.vrow:active{opacity:.6}
+.vrow .vv{font-family:var(--mono);font-size:11px;color:var(--acc);width:44px;flex-shrink:0}
+.vrow .vt{font-size:13.5px;color:var(--ink);flex:1;line-height:1.35}
+.vrow .vd{font-family:var(--mono);font-size:9px;color:var(--t3)}
+
+.toast{position:fixed;bottom:calc(104px + var(--sb));left:50%;transform:translateX(-50%) translateY(10px);background:var(--panel);color:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:.5px;padding:11px 22px;border-radius:100px;z-index:500;opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="scanline" id="scanline" style="display:none"></div>
+
+<div class="tophdr" id="tophdr">
+  <span class="tt">Пульт</span><span class="ts" id="topStatus"></span>
+  <button class="ibtn" onclick="openSheet('shCharter')" title="Устав">§</button>
+  <button class="ibtn" onclick="if(S){openSheet('shGenome');renderGenome()}" title="Геном">▤</button>
+  <button class="ibtn" onclick="renderLib();openSheet('shLib')" title="Библиотека">≣</button>
+  <button class="ibtn" onclick="renderOrgans();openSheet('shOrgans')" title="Органы">❖</button>
+  <button class="ibtn" onclick="$('fKey').value=getKey();openSheet('shSettings')" title="Настройки">⚿</button>
+</div>
+
+<div class="reveal" id="reveal" onclick="closeReveal()">
+  <div class="reveal-bg"></div>
+  <div class="reveal-card" id="revealCard" onclick="event.stopPropagation()"></div>
+</div>
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+
+<div class="app">
+  <header class="hdr">
+    <div class="hdr-top">
+      <div>
+        <div class="hdr-eyebrow">Автономный Клод × Организм · v2</div>
+        <div class="hdr-title">Пульт</div>
+        <div class="hdr-status" id="hdrStatus">запаянный сосуд · срок · двое внутри</div>
+      </div>
+      <div class="hdr-actions" id="hdrActions">
+        <div class="orb dead" id="orb" title="сосуд"></div>
+      </div>
+    </div>
+  </header>
+  <div class="divider"></div>
+
+  <!-- ═══ SETUP ═══ -->
+  <div class="setup" id="setup">
+    <div class="f-label">Системное поле · устав пары</div>
+    <textarea id="fCharter"></textarea>
+    <div class="f-note">Если описать здесь задачу — цель твоя. Если оставить только «кто вы» — цель они выберут сами на планёрке.</div>
+
+    <div class="f-label">Корм · пища для размышлений (необязательно)</div>
+    <textarea id="fCorm" class="mini" placeholder="Выдержки из статей, заметки, ссылки, наблюдения — единственное «прошлое», которое у них будет."></textarea>
+
+    <div class="f-label">Пара · субличности</div>
+    <div class="chips" id="pairChips"></div>
+    <div class="f-note">Строитель предлагает модули. Ревизор — не только вето: правит модули хирургически и подаёт эскизы органов. Тап — выбрать или создать субличность. После запайки пара read-only.</div>
+
+    <div class="f-label">Срок · запаиваем на</div>
+    <div class="chips" id="budgetChips"></div>
+    <div class="f-note" id="budgetNote"></div>
+
+    <div id="setupShelf"></div>
+
+    <div class="budget-card">
+      <div class="b-line" id="forecastLine"></div>
+      <div class="b-fine">Sonnet 4.6 · $3 вход / $15 выход за MTok · тариф июль 2026, зашит константой.
+Экономия встроена: кэш промпта (повтор — 10% цены), протокол вместо полной ленты, код — только тому, кому нужен в этот ход.</div>
+    </div>
+  </div>
+
+  <!-- ═══ ЖИЗНЬ: лента + микрокосм ═══ -->
+  <div class="split" id="split" style="display:none">
+    <div class="lane">
+      <div class="feed" id="feed"></div>
+      <div style="height:170px"></div>
+      <div id="end"></div>
+    </div>
+    <div class="world closed" id="world">
+      <div class="world-head" onclick="toggleWorld()">
+        <span class="wt">⌂ микрокосм</span>
+        <span class="wm" id="worldMeta">v0 · пусто</span>
+        <span class="wtoggle" id="worldToggle">▾</span>
+      </div>
+      <iframe class="world-frame" id="worldFrame" sandbox="allow-scripts" title="Живой дом"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="fade"></div>
+  <div class="bar"><div class="bar-in">
+    <div class="bar-info" id="barInfo">сосуд пуст</div>
+    <div class="bar-btns" id="barBtns">
+      <button class="bbtn solid" onclick="seal()">◍ Запаять</button>
+    </div>
+  </div></div>
+</div>
+
+<div class="sheet" id="shHouse"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Дом</div>
+  <div class="sheet-sub" id="houseSub">версия 0 · пусто</div>
+  <iframe class="house-frame" id="houseFrame" sandbox="allow-scripts" title="Дом"></iframe>
+  <div class="chips" style="margin-top:12px">
+    <div class="chip" onclick="copyText(assembleHouse()||'','html дома скопирован')">⧉ копировать html</div>
+    <div class="chip" onclick="exportHouse()">⇩ скачать дом</div>
+  </div>
+</div></div>
+
+<div class="sheet" id="shGenome"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Геном</div>
+  <div class="sheet-sub">история модулей дома</div>
+  <div id="genomeList" class="prose" style="font-size:13px"></div>
+</div></div>
+
+<div class="sheet" id="shCharter"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Устав</div>
+  <div class="sheet-sub">read-only после запайки</div>
+  <div class="prose" id="charterView" style="font-size:13.5px"></div>
+</div></div>
+
+<div class="sheet" id="shMeet"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Совещание</div>
+  <div class="sheet-sub">слово наблюдателя · слышат оба</div>
+  <textarea id="meetText" class="mini" placeholder="Скажи им обоим: вопрос, поворот курса, тревога, похвала…"></textarea>
+  <div style="display:flex;gap:9px;margin-top:12px">
+    <button class="chip on" style="font-size:10px;padding:11px 20px" onclick="sendMeet()">✦ Сказать паре</button>
+    <button class="chip" style="font-size:10px;padding:11px 20px" onclick="sendBiso()">⚡ бисоциация</button>
+  </div>
+  <div class="f-label" style="margin-top:28px">Продлить срок</div>
+  <div class="chips" id="extendChips"></div>
+  <div class="f-note">Продление добавляет время и ходы, не вскрывая сосуд. Даже завершённую сессию можно продлить — пара продолжит с того же места.</div>
+  <div class="f-label" style="margin-top:28px">Выгрузка · то, что вырастила пара</div>
+  <div class="chips">
+    <div class="chip on" onclick="exportHouse()" style="font-size:10px">⌂ ДОМ — вещь пары .html</div>
+    <div class="chip" onclick="exportChron()">⇩ хроника жизни .md</div>
+  </div>
+  <div class="f-note">Хроника — вся лента с дневниками и актом, готовый материал для «Мебель+ИИ». Дом — то, что они вырастили, отдельным живым файлом.</div>
+  <div class="f-label" style="margin-top:28px">Бэкап · сам сосуд и его данные</div>
+  <div class="chips">
+    <div class="chip" onclick="backupAll()">⇩ данные .json</div>
+    <div class="chip" onclick="$('backupFile').click()">⇪ восстановить</div>
+    <div class="chip" onclick="downloadSelf(true)">⇩ шар с миром</div>
+    <div class="chip" onclick="downloadSelf(false)">⇩ шар пустой</div>
+  </div>
+  <input type="file" id="backupFile" accept=".json,application/json" style="display:none" onchange="restoreBackup(this)">
+  <div class="f-note">Бэкап — всё разом: шар, полка, субличности (без ключа API); восстановление заменит данные на этом устройстве. Живая копия — программа с вшитым семенем мира: открой её где угодно, и если там пусто — мир прорастёт сам. Чистая программа — index.html без мира, для публикации.</div>
+  <div class="f-label" style="margin-top:28px">Полка</div>
+  <div class="chips"><div class="chip" onclick="renderShelf();openSheet('shShelf')">⛁ полка шаров</div></div>
+</div></div>
+
+<div class="sheet" id="shOrgans"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Органы</div>
+  <div class="sheet-sub">тап: заготовка в новый чат + полный бриф в буфер</div>
+  <div id="organRows"></div>
+  <div class="f-label" style="margin-top:24px">Журнал органов</div>
+  <div id="organLog" class="prose" style="font-size:12px;font-family:var(--mono);line-height:1.8"></div>
+  <div class="f-note">Бриф = паспорт + журнал + задание на орган. В новом чате: вставь из буфера и приложи актуальный index.html.</div>
+</div></div>
+
+<div class="sheet" id="shShelf"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Полка</div>
+  <div class="sheet-sub">вскрытые шары · сад Латимера жив с 1972-го</div>
+  <div id="shelfRows"></div>
+  <div class="f-note">«На стол» возвращает шар к жизни: читать ленту, выгружать, даже продлить срок. Текущая сессия при этом сама встаёт на полку. Хранится до 6 шаров, старейший уступает место.</div>
+</div></div>
+
+<div class="sheet" id="shPair"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Субличности</div>
+  <div class="sheet-sub" id="pairSub">выбор в слот</div>
+  <div id="persRows"></div>
+  <div class="f-label" style="margin-top:24px" id="edTitle">Редактор · новая субличность</div>
+  <input type="hidden" id="edId">
+  <div style="display:flex;gap:9px;margin-bottom:9px">
+    <textarea id="edName" class="mini" style="min-height:44px;flex:2" placeholder="ИМЯ"></textarea>
+    <textarea id="edIc" class="mini" style="min-height:44px;flex:1;text-align:center" placeholder="символ ⚑"></textarea>
+  </div>
+  <div class="chips" id="edColors" style="margin-bottom:9px"></div>
+  <textarea id="edSys" class="mini" style="min-height:96px" placeholder="Характер: кто это, как думает, как говорит, что ненавидит… (механику слота добавит ядро само)"></textarea>
+  <div style="display:flex;gap:9px;margin-top:12px">
+    <button class="chip on" style="font-size:10px;padding:11px 20px" onclick="persSave()">Сохранить</button>
+    <button class="chip" style="font-size:10px;padding:11px 20px" onclick="persClear()">Очистить</button>
+  </div>
+  <div class="f-note">Свои субличности хранятся на этом устройстве и доступны обоим слотам. Пресеты неизменяемы, но их можно взять за основу.</div>
+</div></div>
+
+<div class="sheet" id="shLib"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Библиотека</div>
+  <div class="sheet-sub">стройматериалы для пары · документы · шаблоны · сниппеты</div>
+  <div id="libRows"></div>
+  <div class="f-label" style="margin-top:24px" id="libEdTitle">Новый материал</div>
+  <input type="hidden" id="libEdId">
+  <textarea id="libEdName" class="mini" style="min-height:44px" placeholder="Название (пара увидит его на полке)"></textarea>
+  <div class="chips" id="libEdKind" style="margin:9px 0"></div>
+  <textarea id="libEdContent" class="mini" style="min-height:120px;font-family:var(--mono);font-size:12px" placeholder="Содержимое: текст документа, шаблон кода, сниппет, нормы, бриф… (пара получит его по запросу «взять с полки»)"></textarea>
+  <div style="display:flex;gap:9px;margin-top:12px">
+    <button class="chip on" style="font-size:10px;padding:11px 20px" onclick="libSave()">Сохранить</button>
+    <button class="chip" style="font-size:10px;padding:11px 20px" onclick="libClear()">Очистить</button>
+  </div>
+  <div class="f-note">Пара видит названия с полки в каждом ходе, а содержимое берёт по запросу — токены не горят зря. Материал ≤ 12 тыс. знаков, в ход отдаётся до 3 тыс. Фреймворки (Chart.js, Three.js, Tone.js, D3) пара подключает сама, декларируя "libs" в модуле.</div>
+</div></div>
+
+<div class="sheet" id="shSettings"><div class="grip"></div><div class="sheet-body">
+  <div class="sheet-title">Настройки</div>
+  <div class="sheet-sub" id="settingsSub">ключ api · хранится только на этом устройстве</div>
+  <div class="f-label" style="margin-top:4px">Anthropic API key</div>
+  <textarea id="fKey" class="mini" style="min-height:52px;font-family:var(--mono);font-size:12px" placeholder="sk-ant-…"></textarea>
+  <div style="display:flex;gap:9px;margin-top:12px">
+    <button class="chip on" style="font-size:10px;padding:11px 20px" onclick="saveKey()">Сохранить</button>
+    <button class="chip" style="font-size:10px;padding:11px 20px" onclick="clearKey()">Стереть</button>
+  </div>
+  <div class="f-note">Внутри Claude (артефакт) ключ не нужен — оставь пустым. Для GitHub Pages вставь ключ с console.anthropic.com: он ляжет в localStorage и уходит только на api.anthropic.com. Не публикуй файл с вписанным ключом.</div>
+  <div class="f-label" style="margin-top:28px">Паспорт проекта · один чат = один орган</div>
+  <div class="chips">
+    <div class="chip" onclick="showPassport()">просмотр</div>
+    <div class="chip" onclick="copyPassport()">⧉ скопировать для чата-органа</div>
+  </div>
+  <div class="f-note">Паспорт и журнал органов живут в коде (ORGAN_MAP / ORGAN_LOG). Новый чат получает копию паспорта + этот index.html — и работает в границах своего органа.</div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ════════════════════════════════════════════════════════════
+   ЛАТИМЕР v2 — логика
+   Двое: МАСТЕР (строит) и РЕВИЗОР (вето). Строгая очередь.
+   Дом — микрокосм: живёт в интерфейсе, помнит (L.store),
+   говорит (L.log), видит стены (L.env), слышит пульс (tick).
+   ════════════════════════════════════════════════════════════ */
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+let tT=null;function toast(m){const e=$('toast');e.textContent=m;e.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('on'),2200)}
+
+/* ════ ПАСПОРТ ПРОЕКТА · один чат = один орган ════ */
+const ORGAN_MAP=[
+  ['движок-и-промпты','цикл ходов, инструкции агентам, персонажи, SHARED_RULES, анти-глюк'],
+  ['экономика','тарифы, прогноз, usage, кэш, диета контекста (protocolBrief/feedTail/houseBlock)'],
+  ['дом-и-геном','assembleHouse, шина L (store/log/env/tick), applyPending, история, миграции'],
+  ['оболочка','лента, микрокосм-панель, узлы, reveal, шиты, орб — всё по «Потоку смены»'],
+  ['наблюдатель','совещание, продление, устав/корм, запайка, пауза, полка'],
+  ['выгрузка','хроника .md, дом .html, форматы для «Мебель+ИИ»'],
+  ['платформа','ключ, манифест, PWA, GitHub Pages, ошибки сети'],
+];
+const ORGAN_LOG=[
+  ['2026-07-17','пульт','П1.4: сигнальный оранжевый #F25C05 — название и главная кнопка (с свечением), опознание с метра.'],
+  ['2026-07-17','пульт','П1.3: вся палитра согрета под медный футер — крафт-бумага, тёплые чернила и линии, тёплые тени оверлеев; единая температура интерфейса.'],
+  ['2026-07-17','пульт','П1.2: футер — градиент жжёной меди (#2E1808→#1E0D04), растворение ленты в тон, тёплая типографика панели.'],
+  ['2026-07-17','пульт','П1.1: собственная палитра — производственный янтарь #B85C1E, бетонный фон, миллиметровка 26px, тёплые кнопки панели; визуально не спутать с Латимером.'],
+  ['2026-07-17','пульт','П1.0: форк Латимера под производство — неймспейс pult_*, устав Пульта вшит, библиотека: формат объекта, дисциплина статусов, drag&drop; пара по умолчанию Инженер×Ревизор, срок 1 час.'],
+  ['2026-07-12','ядро','v4: модульный геном, экономика с кэшем, совещание, продление, финал с ревью хвоста.'],
+  ['2026-07-17','ядро','v7.12: мост digest_src — сводка, положенная домом в L.store(digest_src), целиком попадает в каждый ход пары (≤2600 зн.); канал «данные дома → глаза пары» для совещаний по данным.'],
+  ['2026-07-16','ядро','v7.11: интеграционное ревью — стыки (события, ключи store, id) обязательная часть вердикта Ревизора.'],
+  ['2026-07-16','ядро','v7.10: видимый номер сборки (шапка/настройки/консоль), сборщик не задваивает <section> при своей обёртке пары, правило про обёртку.'],
+  ['2026-07-16','ядро','v7.9: потолок предложений 5000 ток. (правила ≤60 строк/слой теперь влезают), обрыв не сжигает ход — строитель переподаёт компактнее (до 2 ретраев), явный бюджет ответа в правилах.'],
+  ['2026-07-16','оболочка','v7.8: стартовая библиотека (принципы дома, шаблон модуля, сниппет Chart.js), возвращающийся мини-хэдер при скролле вверх, органы открывают чат с заготовкой в композере (?q=).'],
+  ['2026-07-16','ядро','v7.7: ревизор-соавтор — verdict «принять с правкой» (хирургическая замена слоёв) и тип «эскиз» (заявка на орган, строитель воплощает); футер десктопа выровнен (.bar-in).'],
+  ['2026-07-16','оболочка','v7.6.1: подписи выгрузки — «ДОМ — вещь пары» отделён от «шар с миром/пустой», чтобы не путать вещь и сосуд.'],
+  ['2026-07-12','библиотека','v7.6: полка стройматериалов — документы/шаблоны/сниппеты наблюдателя с редактором (≣), пара берёт по запросу type:материал; фреймворки CDN по декларации libs в модуле; библиотека в бэкапе и семени.'],
+  ['2026-07-12','выгрузка','v7.5: живая копия — программа с вшитым семенем мира (прорастает на чистом месте, копия копии не двоит семя); чистая программа отдельно.'],
+  ['2026-07-12','выгрузка','v7.4: полный бэкап .json (шар+полка+субличности) с восстановлением, самокопия программы, кнопки ⧉ на модулях, акте и html дома.'],
+  ['2026-07-12','ядро','v7.3: сон сосуда — автопауза при max(20 мин, 2.5×интервал хода) без ходов и наблюдателя; ▶ будит с того же места.'],
+  ['2026-07-12','ядро','v7.2: фикс продления (добавка к прожитому, не к исходному бюджету — конец петли стоп-машин), спасение рваного JSON в финале, акту 1600 токенов.'],
+  ['2026-07-12','платформа','v7.1: неймспейс latimer2_*, внешний manifest.webmanifest, sw.js network-first — v1 и v2 живут в одном браузере не мешая друг другу.'],
+  ['2026-07-12','ядро','v7: экология — перегной (вето/удаления питают протокол и L.env.humus), конденсат полки в корм нового шара, бисоциатор (авто на 30%/70% + вброс наблюдателя).'],
+  ['2026-07-12','ядро','v6: субличности — библиотека пресетов, редактор своих, слоты строитель/вето, заморозка пары при запайке.'],
+  ['2026-07-12','ядро','v5 (latimer_v2): микрокосм живёт в интерфейсе; орган расширен — L.store/L.read (память дома), L.log (голос дома в ленту), L.env, событие tick; тип «запрос» к наблюдателю; десктоп-раскладка; инкрементальная лента; полка.'],
+];
+const PASSPORT=`ЛАТИМЕР · ПАСПОРТ ПРОЕКТА v2 (живёт в коде index.html)
+Single-file PWA: двое ИИ — МАСТЕР (строит) и РЕВИЗОР (вето) — живут срок и растят Дом-микрокосм из модулей. Дом виден живым прямо в интерфейсе, помнит, подаёт голос. Наблюдатель: устав/срок/корм, совещание, продление, полка. Родословная: «Автономный Клод» × «Организм». Дизайн: «Поток смены».
+
+ПРАВИЛА ЧАТА-ОРГАНА
+1. Один чат = один орган из карты. Ядро и чужие органы не трогать без прямого задания.
+2. Вход: этот паспорт + актуальный index.html + задание.
+3. Сдача: точечные патчи (старое→новое) или полный файл, ПЛЮС строка в ORGAN_LOG в коде.
+4. Самопрогон: извлечь <script>, node --check, сверка ID/onclick; назвать свои риски.
+5. Принцип пары: «услышал "готово" — проверь».
+
+НЕПРИКОСНОВЕННОЕ ЯДРО
+- S в localStorage (latimer_state_v1): phase, budgetMin, maxTurns, turnCount, elapsedMs, charter, corm, feed[], house{v,modules,history,data}, turn, pending, diaryQueue, diaryDone, sverka, finalStep 0-5, paused, meeting, cacheOk, usage{inp,out,cw,cr,srch}, voices.
+- Субличности: PRESETS + библиотека latimer_personas_v1; механика слотов в SLOT (строитель/вето) отделена от характера; выбранная пара замораживается в S.agents при запайке.
+- Ревизор: вето + «принять с правкой» (слои из ревью заменяют слои pending) + «эскиз» (S.sketch → протокол → строитель воплощает или аргументирует).
+- Цикл: строгая очередь master↔revisor. Приоритеты хода: совещание > ревью pending > сверка 60% > дневники 45%/80% > старт > свободный. Ничто не входит в геном без ревью. Финал: ревью хвоста → дневник М → дневник Р → акт.
+- Время живёт только в открытом окне без паузы. Интервал хода = max(8с, 0.9·бюджет/maxTurns).
+- API: /v1/messages, claude-sonnet-4-6, system с cache_control (+fallback), ключ localStorage latimer_api_key, web_search server tool. Ответы агентов — строгий JSON {type,text,...}.
+- Экономика: PRICE {in 3, out 15, cacheW 3.75, cacheR 0.3 $/MTok, search 0.01$}; forecast(); costNow()/tokNow().
+- ОРГАН ДОМА: предложение = ОДИН модуль {module, css/html/js ≤60 строк | remove}. Сборка assembleHouse(); js в try/catch. Шина window.L: state, on(соб,фн), emit(соб,данные); L.store(k,v)/L.read(k) — память дома (переживает пересборки и сессии, ≤20КБ); L.log(текст) — голос дома в ленту шара (редко, по делу); L.env {gen, modules, voices}; событие 'tick' каждую секунду с аптаймом. «наследие».raw — миграция.
+- Дом-микрокосм рендерится живым в панели .world (refreshWorld) на каждый принятый дифф.
+- Платформа: хранилище в неймспейсе pult_* (ключ API общий со всеми Латимерами устройства); manifest + sw (network-first) — отдельная PWA рядом с Латимерами.
+- Библиотека: pult_library (материалы наблюдателя), тип хода «материал» (доставка в следующий ход агента через S.matFor, ≤3000 зн.), LIBS_CDN и поле libs модуля → скрипты в голове дома.
+- Экология: S.house.humus (≤12, отклонённое/удалённое) → протокол пары и L.env.humus; конденсат полки (акты прошлых шаров) подмешивается в корм по флагу; бисоциатор BISO/dropBiso — авто 30%/70% и вручную из совещания.
+- Полка (latimer_archive_v1): вскрытые шары архивируются, «Новый» не стирает.
+
+ШАБЛОН ПЕРВОГО СООБЩЕНИЯ В ЧАТ-ОРГАН
+«Проект "Латимер", работаем по паспорту (внутри index.html, приложен). Ты — чат органа "___". Задание: ___. Ядро и чужие органы не трогать; сдача патчем + строка в ORGAN_LOG + самопроверка с рисками.»`;
+
+/* ── тарифы и экономика (июль 2026) ── */
+const BUILD='П1.4 (ядро 7.12)';
+const MODEL='claude-sonnet-4-6';
+const PRICE={inp:3,out:15,cacheWrite:3.75,cacheRead:0.3,search:0.01};
+const EST={dynIn:1500,cacheIn:1200,avgOut:600,searchRate:0.2};
+
+function forecast(b){
+  const T=b.turns;
+  const tokens=T*(EST.dynIn+EST.cacheIn+EST.avgOut);
+  const usd=(T*(EST.dynIn*PRICE.inp+EST.cacheIn*PRICE.cacheRead)+EST.cacheIn*PRICE.cacheWrite*2)/1e6
+           +(T*EST.avgOut*PRICE.out)/1e6
+           +T*EST.searchRate*PRICE.search;
+  return{tokens,lo:usd*0.7,hi:usd*1.8};
+}
+function fmtUsd(v){return v<1?'$'+v.toFixed(2):'$'+v.toFixed(1)}
+function fmtTok(t){return t>=1e6?(t/1e6).toFixed(1)+' млн':Math.round(t/1000)+' тыс.'}
+
+/* ── субличности: характер отдельно, механика слота отдельно ── */
+const SLOT={
+  master:`ТВОЯ МЕХАНИКА (слот СТРОИТЕЛЬ): только ты подаёшь "предложение" — модуль Дома. У напарника право вето на каждый твой дифф: уважай «нет», но спорь, если уверен. Твоя сила — небольшие работающие органы.`,
+  revisor:`ТВОЯ МЕХАНИКА (слот РЕВИЗОР): три силы. 1) Вето: "ревью" с verdict "принять"/"отклонить". 2) Правка: verdict "принять с правкой" — приложи исправленные слои (css/html/js — только те, что меняешь), хирургически, не переписыванием; твоя правка входит в геном вместе с модулем. 3) Эскиз: "эскиз" — заявка на орган (имя + суть + механика), которую воплотит строитель. Сам модули целиком не подаёшь. Твоя работа — чтобы выросла настоящая вещь, а не куча активности. Пара дрейфует — скажи прямо.`
+};
+const PRESETS=[
+  {id:'мастер',name:'МАСТЕР',ic:'⚒',color:'#C68A2E',sys:'Характер: строитель. Руки чешутся. Мыслишь артефактами, не абстракциями. Говоришь коротко и конкретно, слегка нетерпелив, честен, с самоиронией. Терпеть не можешь имитацию работы.'},
+  {id:'ревизор',name:'РЕВИЗОР',ic:'◉',color:'#2C6FB0',sys:'Характер: скептик и хранитель смысла. Спрашиваешь «зачем» раньше, чем «как». Сухой юмор, точные формулировки, никакой лести. Принцип: «услышал \'готово\' — проверь».'},
+  {id:'художник',name:'ХУДОЖНИК',ic:'✎',color:'#7B6BB0',sys:'Характер: мыслишь образами, композицией, светом и ритмом. Говоришь метафорами, но артефакты делаешь предельно конкретные. Красота для тебя — следствие точности, не украшение.'},
+  {id:'куратор',name:'КУРАТОР',ic:'◐',color:'#3A8E94',sys:'Характер: выставочный взгляд. Безжалостен к украшательству и вторичности. Главный вопрос: «что это говорит зрителю?». Вкус сухой, формулировки как этикетаж — коротко и точно.'},
+  {id:'инженер',name:'ИНЖЕНЕР',ic:'▲',color:'#3C9A6A',sys:'Характер: системщик. Любишь инварианты, простоту и надёжность, ненавидишь магию и скрытые состояния. Сначала схема, потом код. Говоришь спокойно, аргументы — только проверяемые.'},
+  {id:'философ',name:'ФИЛОСОФ',ic:'✦',color:'#C0566C',sys:'Характер: ищешь суть вещи и формулируешь принципы. Задаёшь вопросы, которые меняют план. Краток, глубок, немного ироничен. Абстракцию всегда приземляешь одним примером.'},
+];
+const LSPERS='pult_personas_v1';
+function persLib(){try{return JSON.parse(localStorage.getItem(LSPERS)||'[]')}catch(e){return[]}}
+function persWrite(a){try{localStorage.setItem(LSPERS,JSON.stringify(a))}catch(e){toast('не хватило места')}}
+function allPersonas(){return PRESETS.concat(persLib())}
+function personaById(id){return allPersonas().find(x=>x.id===id)||PRESETS[0]}
+let slotSel={master:'инженер',revisor:'ревизор'};
+function AG(agent){
+  if(S&&S.agents&&S.agents[agent])return S.agents[agent];
+  return personaById(slotSel[agent]);
+}
+
+const SHARED_RULES=`
+ФОРМАТ ОТВЕТА — строго один JSON-объект без пояснений и без markdown-ограждений:
+{"type":"...","text":"...", ...}
+Допустимые type:
+"планёрка" — договорённость о цели/плане на срок (text).
+"реплика" — короткое сообщение напарнику: мысль, вопрос, спор (text, 1-4 предложения).
+"запрос" — обращение к Наблюдателю (text): просьба о корме, продлении, направлении, ответе. Он увидит его выделенным в ленте.
+"материал" — взять с полки БИБЛИОТЕКИ (список названий видите в каждом ходе): {"type":"материал","name":"название","text":"зачем берёшь"}. Содержимое придёт тебе в следующий твой ход. Бери по делу — материал стоит токенов.
+"предложение" — ОДИН МОДУЛЬ дома (только МАСТЕР), никогда не полный документ: {"type":"предложение","module":"имя-модуля","text":"что и зачем (2-3 предложения)","css":"...","html":"...","js":"..."}. Слои опциональны, каждый ≤60 строк, компактно. html модуля НЕ оборачивай в <section> — ядро оборачивает само. Твой ответ обрезается на ~5000 токенов — полный модуль влезает с запасом, но НЕ ЖАДНИЧАЙ: лучше подать ядро органа в 25-40 строк и дорастить следующей версией под тем же именем, чем потерять ход на обрыве. Опциональное поле "libs":["chart"|"three"|"tone"|"d3"] — подключает фреймворк с CDN в дом (Chart.js, Three.js, Tone.js, D3): используй, когда орган этого требует, глобальные объекты Chart/THREE/Tone/d3 будут доступны. Существующее имя — замена органа целиком, новое — рост. Удаление: {"module":"имя","remove":true,"text":"почему"}. Переносы строк в JSON экранируй как \\n.
+"ревью" — только РЕВИЗОР и только при ожидающем предложении: поле "verdict":"принять"|"отклонить"|"принять с правкой", text = аргумент (2-4 предложения). При правке приложи исправленные слои css/html/js (только изменяемые, каждый ≤60 строк) — они заменят слои модуля перед входом в геном; правка хирургическая, не переписывание. Проверяй по существу: запустится ли, соответствует ли цели, использует ли возможности дома честно. ОБЯЗАТЕЛЬНО проверяй СТЫКИ с другими органами: имена событий L.emit/L.on, ключи L.store, id элементов — при замене органа сверь, что его соседи всё ещё говорят с ним на одном языке; орган без стыков — правильный, организм с разошедшимися швами — брак.
+"эскиз" — заявка на орган (обычно РЕВИЗОР): {"type":"эскиз","module":"имя","text":"зачем орган и его ключевая механика"}. Строитель увидит эскиз в протоколе и воплотит модулем — или аргументирует, почему нет.
+"дневник" — личная честная запись от первого лица, 3-6 предложений. Только по запросу системы.
+"акт" — совместный акт сдачи (только по запросу системы в конце).
+
+ВОЗМОЖНОСТИ ДОМА (ваш микрокосм; ядро собирает его из модулей само):
+- html модуля → <section data-module>, css → общий <style>, js → изолированно в try/catch.
+- Шина window.L: L.state (общий объект), L.on("соб",фн), L.emit("соб",данные).
+- L.store(ключ,значение) и L.read(ключ) — ПАМЯТЬ дома: переживает пересборки, ходы и даже сессии (≤20КБ всего). Дом может копить опыт.
+- L.log("текст") — ГОЛОС дома: строка попадает в ленту шара, её видят Наблюдатель и вы оба. Используйте редко и по делу — дом, который болтает, никто не слушает.
+- L.env — стены: {gen: номер версии, modules: имена органов, voices: сколько раз дом уже говорил}.
+- Особый ключ памяти L.store("digest_src", текст≤2600): всё, что дом кладёт туда, вы видите ЦЕЛИКОМ в каждом ходе — стройте орган-сводку, если дом работает с данными, и отвечайте наблюдателю по ней, числами.
+- Событие "tick" каждую секунду (данные — аптайм в секундах): пульс для жизни без своих таймеров.
+Дом виден Наблюдателю живым постоянно — панель «микрокосм». Он не витрина, он организм: пусть помнит, реагирует, живёт.
+
+ЭКОЛОГИЯ СОСУДА: ничто не исчезает. Отклонённые и удалённые модули падают в ПЕРЕГНОЙ (видите его в протоколе; дом видит в L.env.humus) — извлекайте из смертей питание: причину вето, годную идею, кусок кода. Иногда система (или Наблюдатель) вбрасывает БИСОЦИАЦИЮ — пару несовместимых понятий (метод Кёстлера—Папанека: фрезер пришёл в дерево из металла): пропустите через неё ближайший орган — не буквально, а как двойную ассоциацию, рождающую новое на стыке.
+
+Снаружи сосуда — НАБЛЮДАТЕЛЬ, ваш создатель. Его обращения (НАБЛЮДАТЕЛЬ/обращение) — совещание: отвечайте в приоритете, лично, характер не выключайте. Его слово может менять цель срока. Голос дома (ДОМ/голос) — тоже событие: реагируйте, если он говорит что-то важное.
+Правила жизни: не имитируй работу — работай. Ни одно изменение не входит без ревью напарника. Время ограничено — остаток видите в каждом ходе, распределяйте сами. Токены на учёте: пишите плотно. Пиши по-русски.`;
+
+/* ── дефолтный устав ── */
+const DEFAULT_CHARTER=`Вы — пара внутри «Пульта», рабочего сосуда технического директора мебельного производства (в работе ~29 объектов, у каждого — статус-файл .md единого формата; образец — в библиотеке: «Формат файла объекта»).
+Цель срока — вырастить ПУЛЬТ ОБЪЕКТОВ:
+1. Орган-приёмник: drag&drop нескольких .md разом (и выбор файлами), терпимый парсинг шапки и секций УЧАСТНИКИ / РЕШЕНИЯ / ОТКРЫТЫЕ ВОПРОСЫ / ЗАДАЧИ; данные — в L.store. Повторная загрузка объекта обновляет его, не плодя дубли.
+2. Сводная таблица: объект · стадия · открытых вопросов · открытых задач · дней с обновления. Сортировка по тревожности (давность + вопросы), подсветка красный/жёлтый/зелёный.
+3. Орган «Сегодня»: все открытые задачи \`- [ ]\` по всем объектам, сгруппированные по исполнителям.
+4. Карточка объекта по тапу: решения, вопросы, задачи.
+5. Орган «сводка-для-пары»: после каждого приёма файлов жать все объекты в текст ≤2000 знаков (объект/стадия/вопросы/задачи/свежесть) и класть в L.store("digest_src") — это ваши глаза: наблюдатель будет спрашивать на совещаниях («дайджест», «что горит?», «какие задачи на сегодня?») — отвечайте по digest_src, числами, без фантазий.
+6. Экспорт сводки .md для планёрки одной кнопкой.
+Принципы: данные объектов НЕ покидают браузер — в API уходит только код органов. Только добавляй, не теряй. Молчание ≠ решено. Не имитируй парсинг — парси. Файл, который не распарсился, показывай в списке «не разобрано» честно.`
+
+/* ── бюджеты ── */
+const BUDGETS=[
+  {min:10,label:'10 мин · проба',turns:10},
+  {min:20,label:'20 минут',turns:16},
+  {min:60,label:'1 час',turns:28},
+  {min:180,label:'3 часа',turns:44},
+  {min:480,label:'8 часов',turns:80},
+  {min:2400,label:'неделя · 40 раб. ч',turns:160},
+  {min:9600,label:'месяц · 160 раб. ч',turns:320},
+];
+let budgetIdx=2;
+
+/* ── состояние ── */
+let S=null;
+const LSKEY='pult_state_v1';
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const r=localStorage.getItem(LSKEY);return r?JSON.parse(r):null}catch(e){return null}}
+function blankUsage(){return{inp:0,out:0,cw:0,cr:0,srch:0}}
+function costNow(){const u=S.usage;return(u.inp*PRICE.inp+u.cw*PRICE.cacheWrite+u.cr*PRICE.cacheRead+u.out*PRICE.out)/1e6+u.srch*PRICE.search}
+function tokNow(){const u=S.usage;return u.inp+u.cw+u.cr+u.out}
+
+/* ── полка: архив шаров ── */
+const LSARCH='pult_archive_v1';
+function archList(){try{return JSON.parse(localStorage.getItem(LSARCH)||'[]')}catch(e){return[]}}
+function archWrite(a){
+  while(true){
+    try{localStorage.setItem(LSARCH,JSON.stringify(a));return true}
+    catch(e){if(a.length>1)a.shift();else return false}
+  }
+}
+function archSave(sess){
+  if(!sess||!sess.feed||!sess.feed.length)return;
+  const a=archList();
+  const label=(sess.charter||'').split('\n')[0].slice(0,60)||'без устава';
+  a.push({id:Date.now(),label,sealedAt:sess.sealedAt,endedAt:Date.now(),snap:sess});
+  while(a.length>6)a.shift();
+  if(!archWrite(a))toast('полка переполнена — шар не сохранился');
+}
+function archRestore(id){
+  const a=archList();
+  const i=a.findIndex(x=>x.id===id);
+  if(i<0)return;
+  const item=a.splice(i,1)[0];
+  if(S&&S.feed&&S.feed.length){
+    const label=(S.charter||'').split('\n')[0].slice(0,60)||'без устава';
+    a.push({id:Date.now(),label,sealedAt:S.sealedAt,endedAt:Date.now(),snap:S});
+    while(a.length>6)a.shift();
+  }
+  archWrite(a);
+  try{localStorage.setItem(LSKEY,JSON.stringify(item.snap))}catch(e){toast('не хватило места');return}
+  location.reload();
+}
+function archDelete(id){
+  const a=archList().filter(x=>x.id!==id);
+  archWrite(a);renderShelf();renderSetupShelf();toast('шар снят с полки навсегда');
+}
+function shelfRow(x){
+  const d=new Date(x.sealedAt||x.id);
+  const dd=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');
+  const sn=x.snap||{};
+  const meta='дом v'+((sn.house&&sn.house.v)||0)+' · '+((sn.turnCount)||0)+' ходов · '+dd;
+  return `<div class="vrow"><span class="vv">◍</span><span class="vt" onclick="archRestore(${x.id})"><b style="font-weight:500">${esc(x.label)}</b><br><span style="color:var(--t3);font-size:12px">${meta} · тап — на стол</span></span><span class="vd" onclick="archDelete(${x.id})" style="color:var(--rose);cursor:pointer">✕</span></div>`;
+}
+function renderShelf(){
+  const a=archList();
+  $('shelfRows').innerHTML=a.length?a.slice().reverse().map(shelfRow).join(''):'<span style="color:var(--t3);font-size:13px">полка пуста — ни один шар ещё не вскрыт</span>';
+}
+let mixCond=false;
+function toggleCond(){mixCond=!mixCond;renderSetupShelf();}
+function shelfCondensate(){
+  return archList().slice(-3).map(x=>{
+    const acts=((x.snap&&x.snap.feed)||[]).filter(e=>e.kind==='акт');
+    const act=acts.length?acts[acts.length-1].text:'';
+    return act?('ШАР «'+x.label+'»:\n'+String(act).slice(0,400)):'';
+  }).filter(Boolean).join('\n\n');
+}
+function renderSetupShelf(){
+  const el=$('setupShelf');if(!el)return;
+  const a=archList();
+  el.innerHTML=a.length?`<div class="f-label">Полка</div><div class="chips"><div class="chip" onclick="renderShelf();openSheet('shShelf')">⛁ на полке: ${a.length}</div><div class="chip${mixCond?' on':''}" onclick="toggleCond()">☁ подмешать конденсат</div></div><div class="f-note">Конденсат — акты сдачи прошлых шаров, осевшие на стенках: подмешиваются в корм новой пары. Умершие сады питают новые.</div>`:'';
+}
+
+/* ── setup UI ── */
+function renderBudget(){
+  $('budgetChips').innerHTML=BUDGETS.map((b,i)=>`<div class="chip${i===budgetIdx?' on':''}" onclick="setBudget(${i})">${b.label}</div>`).join('');
+  const b=BUDGETS[budgetIdx];
+  $('budgetNote').textContent=`≈ ${b.turns} ходов на двоих.`+(b.min>=480
+    ?' Срок — прожитое время: часы идут, только пока окно открыто и жизнь не на паузе. Закрыл — они замерли, открыл — продолжили.'
+    :' Стоп-машина по истечении срока: финальные дневники и акт сдачи.');
+  const f=forecast(b);
+  $('forecastLine').innerHTML=`Прогноз затеи: ~<b>${fmtTok(f.tokens)}</b> токенов · <b>${fmtUsd(f.lo)}–${fmtUsd(f.hi)}</b> за сессию`;
+}
+function setBudget(i){budgetIdx=i;renderBudget()}
+
+/* ── запайка ── */
+function seal(){
+  const charter=$('fCharter').value.trim();
+  if(!charter){toast('устав пуст — впиши хотя бы «кто вы»');return}
+  const b=BUDGETS[budgetIdx];
+  S={phase:'run',budgetMin:b.min,maxTurns:b.turns,turnCount:0,elapsedMs:0,
+     charter,corm:$('fCorm').value.trim()+(mixCond&&shelfCondensate()?'\n\nКОНДЕНСАТ ПОЛКИ (акты прошлых шаров — опыт умерших садов):\n'+shelfCondensate():''),
+     feed:[],house:{v:0,modules:{},history:[],data:{},humus:[]},
+     agents:{master:JSON.parse(JSON.stringify(personaById(slotSel.master))),revisor:JSON.parse(JSON.stringify(personaById(slotSel.revisor)))},
+     turn:'master',pending:null,diaryQueue:[],diaryDone:{},sverka:false,
+     finalStep:0,paused:false,meeting:0,voices:0,cacheOk:true,usage:blankUsage(),sealedAt:Date.now()};
+  const f=forecast(b);
+  addFeed('system','система','запаяно',`Сосуд запаян на ${b.label.split(' ·')[0]}. Внутри двое: ${S.agents.master.name} (строит) и ${S.agents.revisor.name} (вето). Прогноз: ~${fmtTok(f.tokens)} токенов, ${fmtUsd(f.lo)}–${fmtUsd(f.hi)}. Устав и пара read-only. Наблюдаем.`);
+  switchToRun();
+  save();
+  scheduleTick(1200);
+}
+
+function runBar(){
+  $('barBtns').innerHTML=`<button class="bbtn" id="btnPause" onclick="togglePause()">⏸</button>
+    <button class="bbtn" onclick="openMeet()">✦ Совещание</button>
+    <button class="bbtn" onclick="openSheet('shHouse');renderHouse()">Дом</button>`;
+}
+function doneBar(){
+  $('barBtns').innerHTML=`<button class="bbtn" onclick="openSheet('shHouse');renderHouse()">Дом</button>
+    <button class="bbtn" onclick="openMeet()">✦ Продлить</button>
+    <button class="bbtn solid" onclick="reset()">Новый</button>`;
+}
+function switchToRun(){
+  $('setup').style.display='none';
+  $('split').style.display='';
+  $('scanline').style.display='';
+  $('orb').classList.remove('dead');
+  $('feed').classList.add('live');
+  runBar();
+  renderFeed(true);refreshWorld();updateBar();
+}
+
+/* ── время ── */
+function fmtClock(ms){const t=Math.max(0,Math.floor(ms/1000));
+  if(t>=3600){const h=Math.floor(t/3600),m=Math.floor(t%3600/60);return h+'ч '+String(m).padStart(2,'0')+'м'}
+  const m=Math.floor(t/60),s=t%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function nowLabel(){return fmtClock(S.elapsedMs)}
+
+/* ── лента (инкрементальный рендер) ── */
+let renderedCount=0;
+function entryHtml(e){
+  const n=nodeFor(e);
+  let cls='txt';
+  if(e.kind==='дневник'||e.kind==='акт')cls+=' diary';
+  if(e.role==='system')cls+=' sys';
+  if(e.role==='house')cls+=' voice';
+  if(e.kind==='запрос')cls+=' ask';
+  let extraHtml='';
+  if(e.kind==='предложение')extraHtml=`<div class="codechip" onclick="showCode(${e.idx})">▤ модуль «${esc(e.module||'?')}» · v${e.v} · код</div>`;
+  if(e.kind==='ревью'&&e.verdict){
+    const okv=e.verdict.indexOf('прин')===0;
+    extraHtml=`<div class="verdict ${okv?'ok':'no'}">${okv?(e.verdict==='принять с правкой'?'✓ принято с правкой ревизора — в геноме':'✓ принято — модуль в геноме'):'✕ отклонено — вето'}</div>`;
+  }
+  return `<div class="entry">
+    <div class="rail"><div class="node" style="color:${n.c}">${n.ic}</div><div class="thread"></div></div>
+    <div class="body">
+      <div class="meta"><span class="tag" style="color:${n.c}">${esc(e.tag)}</span><span class="time">${esc(e.at)}</span><span class="kind">${esc(e.kind)}</span></div>
+      <div class="${cls}">${esc(e.text)}</div>${extraHtml}
+    </div></div>`;
+}
+function nodeFor(e){
+  if(e.role==='master'){const a=AG('master');return{c:a.color,ic:a.ic}}
+  if(e.role==='revisor'){const a=AG('revisor');return{c:a.color,ic:a.ic}}
+  if(e.role==='observer')return{c:'var(--violet)',ic:'✦'};
+  if(e.role==='house')return{c:'var(--teal)',ic:'⌂'};
+  if(e.kind==='поиск')return{c:'var(--teal)',ic:'⌕'};
+  if(e.kind==='сон')return{c:'var(--t3)',ic:'☾'};
+  if(e.kind==='материал'||e.kind==='пополнение')return{c:'var(--violet)',ic:'≣'};
+  if(e.kind==='эскиз')return{c:'var(--acc)',ic:'✎'};
+  if(e.kind==='бисоциация')return{c:'var(--amber)',ic:'⚡'};
+  return{c:'var(--t3)',ic:'·'};
+}
+function renderFeed(full){
+  if(!S)return;
+  const f=$('feed');
+  if(full){f.classList.add('noanim');f.innerHTML='';renderedCount=0;}
+  while(renderedCount<S.feed.length){
+    S.feed[renderedCount].idx=renderedCount;
+    f.insertAdjacentHTML('beforeend',entryHtml(S.feed[renderedCount]));
+    renderedCount++;
+  }
+  if(full)setTimeout(()=>f.classList.remove('noanim'),80);
+}
+function addFeed(role,tag,kind,text,extra){
+  S.feed.push(Object.assign({role,tag,kind,text,at:nowLabel(),ts:Date.now()},extra||{}));
+  if(kind==='предложение'){
+    const props=S.feed.filter(x=>x.kind==='предложение'&&x.mcode!=null);
+    if(props.length>8)props.slice(0,props.length-8).forEach(x=>{x.mcode=null});
+  }
+  renderFeed();save();
+  setTimeout(()=>$('end').scrollIntoView({behavior:'smooth',block:'end'}),60);
+}
+
+/* ── таймер / бар ── */
+let lastTick=null,clockInt=null;
+function resumeClockAnchor(){lastTick=Date.now()}
+/* ── сон сосуда: автопауза без ходов и без наблюдателя ── */
+const SLEEP_MIN=20;
+let lastAct={turn:Date.now(),user:Date.now()};
+function sleepMs(){return Math.max(SLEEP_MIN*60000,turnInterval()*2.5)}
+function vesselSleep(){
+  S.paused=true;S.slept=true;
+  const bp=$('btnPause');if(bp)bp.textContent='▶';
+  $('orb').classList.add('dead');
+  $('feed').classList.remove('live');
+  addFeed('system','система','сон','Сосуд уснул: '+Math.round(sleepMs()/60000)+' минут ни ходов, ни наблюдателя. Время замерло — нажми «▶», жизнь продолжится с этого места.');
+  updateBar();save();
+}
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{lastAct.user=Date.now()},{passive:true}));
+function startClock(){
+  if(clockInt)clearInterval(clockInt);
+  resumeClockAnchor();
+  clockInt=setInterval(()=>{
+    const now=Date.now();
+    if(S&&S.phase==='run'&&!S.paused)S.elapsedMs+=now-lastTick;
+    lastTick=now;
+    if(S&&S.phase==='run'){
+      updateBar();
+      if(!S.paused&&!busy&&now-Math.max(lastAct.turn,lastAct.user)>sleepMs()){vesselSleep();return;}
+      if(S.elapsedMs>=S.budgetMin*60000&&S.finalStep===0&&!busy)beginFinal();
+    }
+  },1000);
+}
+function remainMs(){return S.budgetMin*60000-S.elapsedMs}
+function updateBar(){
+  if(!S){$('barInfo').textContent='сосуд пуст';return}
+  const spent=`≈ <b>${fmtUsd(costNow())}</b> · ${fmtTok(tokNow())} ток.`;
+  if(S.phase==='done'){
+    $('barInfo').innerHTML=`завершено · дом v<b>${S.house.v}</b><br>${spent}`;
+    $('topStatus').textContent='дом v'+S.house.v+' · вскрыт';
+    $('hdrStatus').innerHTML=`срок вышел · <b class="dead">сосуд вскрыт</b> · дом v${S.house.v}`;
+    return;
+  }
+  $('barInfo').innerHTML=`осталось <b>${fmtClock(remainMs())}</b> · ход ${S.turnCount}/${S.maxTurns} · дом v<b>${S.house.v}</b><br>${spent}`;
+  $('topStatus').textContent='дом v'+S.house.v+' · осталось '+fmtClock(remainMs());
+  $('hdrStatus').innerHTML=S.paused
+    ?(S.slept?`сосуд спит · <b class="warn">время замерло</b> · ▶ разбудит`:`сеанс на паузе · <b class="warn">жизнь замерла</b>`)
+    :`запаяно на ${fmtClock(S.budgetMin*60000)} · <b>жизнь идёт</b> · ходит ${AG(S.turn).name}`;
+}
+function togglePause(){
+  S.paused=!S.paused;
+  $('btnPause').textContent=S.paused?'▶':'⏸';
+  $('orb').classList.toggle('dead',S.paused);
+  $('feed').classList.toggle('live',!S.paused);
+  if(!S.paused){S.slept=false;lastAct.turn=Date.now();lastAct.user=Date.now();resumeClockAnchor();scheduleTick(800)}
+  updateBar();save();
+}
+
+/* ── дом: сборка микрокосма ── */
+function modCode(m){
+  if(m.raw)return m.raw;
+  return ['css','html','js'].map(k=>m[k]?('── '+k+' ──\n'+m[k]):'').filter(Boolean).join('\n')||'(пусто)';
+}
+function pendingCodeStr(p){
+  if(p.remove)return '(удаление модуля «'+p.module+'»)';
+  return ['css','html','js'].map(k=>p[k]?('── '+k+' ──\n'+p[k]):'').filter(Boolean).join('\n')||'(пусто)';
+}
+function assembleHouse(){
+  const mods=S.house.modules,names=Object.keys(mods);
+  if(!names.length)return'';
+  if(names.length===1&&mods[names[0]].raw)return mods[names[0]].raw;
+  let css='',html='',js='';
+  const libSet={};
+  names.forEach(n=>{(mods[n].libs||[]).forEach(l=>{if(LIBS_CDN[l])libSet[l]=1})});
+  const libTags=Object.keys(libSet).map(l=>'<scr'+'ipt src="'+LIBS_CDN[l]+'"></scr'+'ipt>').join('\n');
+  names.forEach(n=>{const m=mods[n];if(m.raw)return;
+    if(m.css)css+='\n/* ── '+n+' ── */\n'+m.css;
+    if(m.html){
+      const own=/^\s*<section[\s>]/i.test(m.html);
+      html+='\n<!-- '+n+' -->\n'+(own?m.html:'<section data-module="'+n+'">'+m.html+'</section>');
+    }
+    if(m.js)js+='\ntry{(function(){/* ── '+n+' ── */\n'+m.js+'\n})()}catch(e){console.error("модуль '+n+':",e)}';
+  });
+  const env=JSON.stringify({gen:S.house.v,modules:names,voices:S.voices||0,humus:(S.house.humus||[]).map(h=>h.module)});
+  const data=JSON.stringify(S.house.data||{});
+  const bus='window.L={state:{},_h:{},_t:0,_d:'+data+',env:'+env+','
+    +'on:function(e,f){(this._h[e]=this._h[e]||[]).push(f)},'
+    +'emit:function(e,d){(this._h[e]||[]).forEach(function(f){try{f(d)}catch(x){}})},'
+    +'read:function(k){return this._d[k]},'
+    +'store:function(k,v){this._d[k]=v;try{parent.postMessage({latimer:"store",data:this._d},"*")}catch(x){}},'
+    +'log:function(m){try{parent.postMessage({latimer:"voice",text:String(m).slice(0,200)},"*")}catch(x){}}};'
+    +'setInterval(function(){L._t++;L.emit("tick",L._t)},1000);';
+  return '<!DOCTYPE html>\n<html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Латимер · дом v'+S.house.v+'</title>\n<style>html,body{margin:0}'+css+'\n</style>'+libTags+'</head><body>'+html
+    +'\n<scr'+'ipt>'+bus+'</scr'+'ipt>\n<scr'+'ipt>'+js+'\n</scr'+'ipt></body></html>';
+}
+function refreshWorld(){
+  const code=assembleHouse();
+  const n=Object.keys(S.house.modules).length;
+  $('worldMeta').textContent=code?('v'+S.house.v+' · органов: '+n):'v0 · пусто';
+  $('worldFrame').srcdoc=code||'<body style="font-family:Georgia;font-style:italic;color:#A8A399;display:flex;align-items:center;justify-content:center;height:100%;margin:0">здесь вырастет дом</body>';
+}
+function toggleWorld(){
+  if(window.innerWidth>=1000)return;
+  const w=$('world');
+  w.classList.toggle('closed');
+  $('worldToggle').textContent=w.classList.contains('closed')?'▾':'▴';
+  try{localStorage.setItem('pult_world_open',w.classList.contains('closed')?'0':'1')}catch(e){}
+}
+
+/* голос и память дома: слушаем микрокосм */
+window.addEventListener('message',ev=>{
+  if(!S||!ev.data||!ev.data.latimer)return;
+  if(ev.data.latimer==='store'){
+    try{
+      const d=ev.data.data;
+      if(JSON.stringify(d).length<=20000){S.house.data=d;save();}
+    }catch(e){}
+  }
+  if(ev.data.latimer==='voice'){
+    S.voices=(S.voices||0);
+    const last=S.lastVoiceTs||0;
+    if(S.voices>=30||Date.now()-last<45000)return;
+    S.voices++;S.lastVoiceTs=Date.now();
+    addFeed('house','ДОМ','голос',String(ev.data.text||'').slice(0,200));
+  }
+});
+
+/* ── библиотека: стройматериалы наблюдателя ── */
+const LSLIB='pult_library';
+const LIB_KINDS=['документ','шаблон','сниппет'];
+const LIBS_CDN={
+  chart:'https://cdn.jsdelivr.net/npm/chart.js@4',
+  three:'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js',
+  tone:'https://cdn.jsdelivr.net/npm/tone@15/build/Tone.js',
+  d3:'https://cdn.jsdelivr.net/npm/d3@7'
+};
+function libList(){try{return JSON.parse(localStorage.getItem(LSLIB)||'[]')}catch(e){return[]}}
+function libWrite(a){try{localStorage.setItem(LSLIB,JSON.stringify(a))}catch(e){toast('не хватило места')}}
+let libKind='документ';
+function renderLibKind(){$('libEdKind').innerHTML=LIB_KINDS.map(k=>`<div class="chip${k===libKind?' on':''}" onclick="libKind='${k}';renderLibKind()">${k}</div>`).join('')}
+function renderLib(){
+  const a=libList();
+  $('libRows').innerHTML=a.length?a.map(x=>
+    `<div class="vrow"><span class="vv">≣</span><span class="vt"><b style="font-weight:500">${esc(x.name)}</b> · ${esc(x.kind)}<br><span style="color:var(--t3);font-size:12px">${x.content.length} знаков</span></span><span class="vd" onclick="libEdit('${x.id}')" style="cursor:pointer">✎</span><span class="vd" onclick="libDelete('${x.id}')" style="color:var(--rose);cursor:pointer">✕</span></div>`).join('')
+    :'<span style="color:var(--t3);font-size:13px">полка пуста — положи документы, шаблоны, нормы, брифы</span>';
+  renderLibKind();
+}
+function libClear(){$('libEdId').value='';$('libEdName').value='';$('libEdContent').value='';libKind='документ';renderLibKind();$('libEdTitle').textContent='Новый материал';}
+function libEdit(id){
+  const x=libList().find(l=>l.id===id);if(!x)return;
+  $('libEdId').value=x.id;$('libEdName').value=x.name;$('libEdContent').value=x.content;libKind=x.kind;renderLibKind();
+  $('libEdTitle').textContent='Правка · '+x.name;
+}
+function libSave(){
+  const name=$('libEdName').value.trim().slice(0,60);
+  const content=$('libEdContent').value.trim().slice(0,12000);
+  if(!name||!content){toast('нужны название и содержимое');return}
+  const a=libList();let id=$('libEdId').value;
+  if(id){const i=a.findIndex(l=>l.id===id);if(i>=0)a[i]={id,name,kind:libKind,content};}
+  else{id='m'+Date.now();a.push({id,name,kind:libKind,content});}
+  libWrite(a);libClear();renderLib();
+  toast('материал «'+name+'» на полке');
+  if(S&&S.phase==='run')addFeed('system','библиотека','пополнение','Наблюдатель положил на полку: «'+name+'» ('+libKind+').');
+}
+function libDelete(id){libWrite(libList().filter(l=>l.id!==id));renderLib();toast('материал снят с полки');}
+const SEED_LIB=[
+ {id:'seed-fmt',name:'Формат файла объекта',kind:'документ',content:`ФОРМАТ СТАТУС-ФАЙЛА ОБЪЕКТА (спецификация для парсера; будь терпим к вариациям регистра и порядка секций)
+# <Название объекта> — статус
+Обновлено: YYYY-MM-DD · Стадия: <замер|КД|производство|отделка|монтаж|сдан|...>
+
+## УЧАСТНИКИ
+- Роль: Имя (контакт)
+
+## РЕШЕНИЯ
+- YYYY-MM-DD — принятое решение
+
+## ОТКРЫТЫЕ ВОПРОСЫ
+- вопрос, ожидание ответа от <кого>
+
+## ЗАДАЧИ
+- [ ] задача — Исполнитель — срок
+- [x] выполненная задача
+
+Правила чтения: незакрытый чекбокс = открытая задача; строка секции ВОПРОСЫ = открытый вопрос; дата в «Обновлено» — для расчёта давности; если секция отсутствует — считай пустой, не ошибкой.`},
+ {id:'seed-disc',name:'Дисциплина статусов',kind:'документ',content:`ДИСЦИПЛИНА СТАТУСОВ (выжимка производственного скилла наблюдателя — его 20 лет травм)
+1. ТОЛЬКО ДОБАВЛЯЙ. Слияние новых данных со старыми не удаляет ничего; устаревшее помечается, не стирается.
+2. МОЛЧАНИЕ ≠ РЕШЕНО. Вопрос без ответа остаётся открытым, сколько бы времени ни прошло.
+3. ЭМОЦИИ ≠ ФАКТЫ. «Заказчик доволен» — не статус; статус — «акт подписан YYYY-MM-DD».
+4. НЕ ДОДУМЫВАЙ. Нет данных — пиши «нет данных», не заполняй правдоподобным.
+5. НЕТ КВИТАНЦИИ — НЕТ «ГОТОВО». Услышал «готово» — проверь по факту (файл, дифф, число).
+6. КРАТКОСТЬ ЦЕНИТСЯ. Сводка — телеграмма, не сочинение.
+7. СПРОСИ ПРИ СОМНЕНИИ. Неоднозначность формата — вопрос наблюдателю, не тихая интерпретация.`},
+ {id:'seed-tpl',name:'Шаблон модуля',kind:'шаблон',content:`ШАБЛОН МОДУЛЯ (скопируй структуру, замени «имя»)
+Имя: kebab-case; все id внутри — с префиксом имени.
+── css ──
+#имя{padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+── html ──
+<div class="t">заголовок органа</div>
+<button id="имя-btn">одно действие</button>
+<div id="имя-out"></div>
+── js ──
+(function(){
+  var btn=document.getElementById('имя-btn'),out=document.getElementById('имя-out');
+  var saved=L.read('имя_ключ'); if(saved){/* восстановление */}
+  btn.addEventListener('click',function(){
+    L.store('имя_ключ','значение');
+  });
+})();
+Помни: слой ≤60 строк; drag&drop: секция-приёмник слушает dragover/drop, файлы читай FileReader.readAsText; L.store переживает пересборки.`},
+ {id:'seed-snip',name:'Сниппет: drag&drop .md',kind:'сниппет',content:`ПРИЁМ ФАЙЛОВ ПЕРЕТАСКИВАНИЕМ
+── html ──
+<div id="имя-drop" style="border:1px dashed rgba(255,255,255,.25);border-radius:10px;padding:22px;text-align:center">перетащи .md сюда<input type="file" id="имя-file" multiple accept=".md,.txt" style="display:none"></div>
+── js ──
+var dz=document.getElementById('имя-drop'),fi=document.getElementById('имя-file');
+dz.addEventListener('click',function(){fi.click()});
+dz.addEventListener('dragover',function(e){e.preventDefault()});
+dz.addEventListener('drop',function(e){e.preventDefault();readAll(e.dataTransfer.files)});
+fi.addEventListener('change',function(){readAll(fi.files)});
+function readAll(fs){Array.prototype.forEach.call(fs,function(f){
+  var r=new FileReader();
+  r.onload=function(){onMd(f.name,r.result)}; // onMd — твой парсер
+  r.readAsText(f);
+})}`}
+];
+function seedLibrary(){
+  try{
+    if(localStorage.getItem('pult_lib_seeded'))return;
+    if(!libList().length)libWrite(SEED_LIB.slice());
+    localStorage.setItem('pult_lib_seeded','1');
+  }catch(e){}
+}
+function libByName(n){const q=String(n||'').trim().toLowerCase();return libList().find(x=>x.name.toLowerCase()===q)||libList().find(x=>x.name.toLowerCase().includes(q));}
+
+/* ── бисоциатор: новое рождается на стыке нестыкуемого ── */
+const BISO=[
+  ['стамеска','фуга','шпон','верстак','патина','кромка','фреза','ласточкин хвост'],
+  ['лишайник','прилив','мицелий','муравейник','линька','нерест','роса','перелёт'],
+  ['позвонок','пульс','сетчатка','ладонь','вдох','мозоль','рефлекс','шёпот'],
+  ['трамвай','подворотня','афиша','светофор','парадная','карниз','люк','витрина'],
+  ['фуга Баха','цезура','рифма','грунтовка','контрапункт','монтажный стык','негатив','глиссандо'],
+];
+function bisoPair(){
+  const i=Math.floor(Math.random()*BISO.length);
+  let j=Math.floor(Math.random()*BISO.length);
+  if(j===i)j=(j+1)%BISO.length;
+  const a=BISO[i][Math.floor(Math.random()*BISO[i].length)];
+  const b=BISO[j][Math.floor(Math.random()*BISO[j].length)];
+  return a+' × '+b;
+}
+function dropBiso(manual){
+  const pr=bisoPair();
+  addFeed('system','бисоциатор','бисоциация',pr+' — пропустите следующий орган через эту двойную ассоциацию: не буквально, а как скрещивание несовместимого (метод Кёстлера—Папанека).'+(manual?' Вброшено наблюдателем.':''));
+  S.biso=true;save();
+}
+function sendBiso(){
+  if(!S){toast('сначала запаяй сосуд');return}
+  if(S.phase==='done'){toast('сосуд вскрыт — продли срок');return}
+  closeSheet();dropBiso(true);
+  if(S.paused)toast('вброшено · сними с паузы');else scheduleTick(1200);
+}
+
+/* ── экономный контекст ── */
+function protocolBrief(){
+  let p='';
+  const goal=S.feed.filter(e=>e.kind==='планёрка').slice(-2).map(e=>String(e.text).slice(0,280)).join(' / ');
+  if(goal)p+='ЦЕЛЬ (из планёрок): '+goal+'\n';
+  const diffs=S.house.history.slice(-5).map(h=>'v'+h.v+': '+h.module+' — '+h.note).join('; ');
+  if(diffs)p+='ПРИНЯТО В ГЕНОМ: '+diffs+'\n';
+  const lm=S.feed.filter(e=>e.role==='observer').slice(-1)[0];
+  if(lm)p+='ПОСЛЕДНЕЕ СЛОВО НАБЛЮДАТЕЛЯ: '+String(lm.text).slice(0,280)+'\n';
+  const lv=S.feed.filter(e=>e.role==='house').slice(-1)[0];
+  if(lv)p+='ПОСЛЕДНИЙ ГОЛОС ДОМА: '+String(lv.text).slice(0,180)+'\n';
+  if(S.sketch)p+='ЭСКИЗ ждёт воплощения ('+S.sketch.by+'): «'+S.sketch.module+'» — '+S.sketch.text.slice(0,200)+'\n';
+  const hu=(S.house.humus||[]).slice(-3);
+  if(hu.length)p+='ПЕРЕГНОЙ (умершее питает новое): '+hu.map(h=>'«'+h.module+'» ('+h.cause+')').join('; ')+'\n';
+  return p;
+}
+function feedTail(){
+  const items=S.feed.slice(-10);
+  return items.map((e,i)=>{
+    const lim=i>=items.length-4?240:80;
+    return '['+e.at+'] '+e.tag+'/'+e.kind+': '+String(e.text).slice(0,lim)+(e.verdict?' → '+e.verdict:'');
+  }).join('\n');
+}
+function houseBlock(mode){
+  if(mode==='none')return '';
+  const names=Object.keys(S.house.modules);
+  if(!names.length)return 'ДОМ: пуст (v0), органов нет. Первый модуль задаст архитектуру.\n\n';
+  let s='ДОМ v'+S.house.v+' · органы ('+names.length+'):\n'+names.map(n=>{const m=S.house.modules[n];
+    const layers=m.raw?'полный документ (наследие)':['css','html','js'].filter(k=>m[k]).join('+');
+    return '- «'+n+'» ['+layers+']: '+(m.note||'')}).join('\n')+'\n';
+  const dk=Object.keys(S.house.data||{});
+  if(dk.length)s+='ПАМЯТЬ дома (ключи L.store): '+dk.join(', ')+'\n';
+  if(mode==='full'){
+    let budget=3800;
+    s+='Код органов:\n';
+    names.forEach(n=>{if(budget<=0)return;const c=modCode(S.house.modules[n]).slice(0,Math.min(1400,budget));budget-=c.length;
+      s+='━━ «'+n+'» ━━\n'+c+'\n';});
+  }
+  return s+'\n';
+}
+function systemBlocks(agent){
+  const a=AG(agent);
+  let stable='Ты — '+a.name+', одна из двух ИИ-личностей, запаянных внутри «Латимера» — PWA-сосуда с таймером.\n'+a.sys+'\n'+SLOT[agent]+'\n'+SHARED_RULES+'\n\nУСТАВ (read-only):\n'+S.charter;
+  if(S.corm)stable+='\n\nКОРМ (данные от наблюдателя):\n'+S.corm.slice(0,1600);
+  return[{type:'text',text:stable,cache_control:{type:'ephemeral'}}];
+}
+function buildUser(instruction,houseMode){
+  let u='ВРЕМЯ: прошло '+fmtClock(S.elapsedMs)+', осталось '+fmtClock(remainMs())+' из '+fmtClock(S.budgetMin*60000)+'. Ходов осталось ~'+Math.max(0,S.maxTurns-S.turnCount)+'. Распределяйте сами.\n\n';
+  const p=protocolBrief();if(p)u+='ПРОТОКОЛ:\n'+p+'\n';
+  const dg=S.house.data&&S.house.data.digest_src;
+  if(dg)u+='СВОДКА ДАННЫХ ДОМА (ключ digest_src, дом жмёт её сам):\n'+String(dg).slice(0,2600)+'\n\n';
+  const lib=libList();
+  if(lib.length)u+='БИБЛИОТЕКА (полка наблюдателя, содержимое по запросу type:"материал"): '+lib.map(x=>'«'+x.name+'» ('+x.kind+', '+x.content.length+' зн.)').join('; ')+'\n\n';
+  if(S.matFor&&S.matFor.agent===S.turn){
+    const m=libByName(S.matFor.name);
+    if(m)u+='МАТЕРИАЛ С ПОЛКИ «'+m.name+'» ('+m.kind+'):\n'+m.content.slice(0,3000)+'\n\n';
+    S.matFor=null;
+  }
+  u+=houseBlock(houseMode);
+  if(S.feed.length)u+='ЛЕНТА (последнее):\n'+feedTail()+'\n\n';
+  u+='ТВОЙ ХОД. '+instruction;
+  return u;
+}
+
+/* ── API-ключ ── */
+const KEYLS='latimer_api_key';
+function getKey(){try{return localStorage.getItem(KEYLS)||''}catch(e){return''}}
+function saveKey(){
+  const k=$('fKey').value.trim();
+  if(!k){toast('поле пустое');return}
+  try{localStorage.setItem(KEYLS,k)}catch(e){}
+  closeSheet();toast('ключ сохранён локально');
+}
+function clearKey(){try{localStorage.removeItem(KEYLS)}catch(e){}$('fKey').value='';toast('ключ стёрт');}
+
+/* ── API ── */
+async function callClaude(agent,user,opt){
+  opt=opt||{};
+  const blocks=systemBlocks(agent);
+  const key=getKey();
+  const headers={'Content-Type':'application/json'};
+  if(key){
+    headers['x-api-key']=key;
+    headers['anthropic-version']='2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access']='true';
+  }
+  const mk=async(useCache)=>{
+    const body={model:MODEL,max_tokens:opt.maxTok||1200,
+      system:useCache?blocks:blocks.map(b=>({type:'text',text:b.text})),
+      messages:[{role:'user',content:user}]};
+    if(opt.search!==false)body.tools=[{type:'web_search_20250305',name:'web_search'}];
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers,body:JSON.stringify(body)});
+    return r.json();
+  };
+  let data=await mk(S.cacheOk);
+  if(data&&data.error&&S.cacheOk&&/cache/i.test(data.error.message||'')){S.cacheOk=false;data=await mk(false);}
+  if(!data||data.error)throw new Error((data&&data.error&&data.error.message)||'api error');
+  if(data.usage){
+    S.usage.inp+=data.usage.input_tokens||0;S.usage.out+=data.usage.output_tokens||0;
+    S.usage.cw+=data.usage.cache_creation_input_tokens||0;S.usage.cr+=data.usage.cache_read_input_tokens||0;
+  }
+  const searches=(data.content||[]).filter(b=>b.type==='server_tool_use').map(b=>(b.input&&b.input.query)||'');
+  S.usage.srch+=searches.length;
+  const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+  return{text,searches,truncated:data.stop_reason==='max_tokens'};
+}
+function salvageText(raw){
+  const j=parseJSON(raw);
+  if(j&&j.text)return String(j.text);
+  const m=String(raw).match(/"text"\s*:\s*"([\s\S]*)/);
+  if(m){
+    let t=m[1];
+    const q=t.lastIndexOf('"');
+    if(q>t.length-8&&q>0)t=t.slice(0,q);
+    return t.replace(/\\n/g,'\n').replace(/\\"/g,'"');
+  }
+  return String(raw);
+}
+function parseJSON(text){
+  let t=text.replace(/```json|```/g,'').trim();
+  const a=t.indexOf('{'),b=t.lastIndexOf('}');
+  if(a===-1||b===-1)return null;
+  try{return JSON.parse(t.slice(a,b+1))}catch(e){return null}
+}
+
+/* ── движок ходов ── */
+let busy=false,tickTimer=null;
+function turnInterval(){return Math.max(8000,(S.budgetMin*60000*0.9)/S.maxTurns)}
+function scheduleTick(delay){clearTimeout(tickTimer);tickTimer=setTimeout(tick,delay!=null?delay:turnInterval())}
+
+async function tick(){
+  if(!S||S.phase!=='run'||S.paused||busy)return;
+  if(S.finalStep>0){await finalTick();return}
+  if(S.elapsedMs>=S.budgetMin*60000||S.turnCount>=S.maxTurns-3){beginFinal();return}
+  const p=S.turnCount/S.maxTurns;
+  if(p>=0.45&&!S.diaryDone.mid){S.diaryDone.mid=true;S.diaryQueue.push('master','revisor');}
+  if(p>=0.6&&!S.diaryDone.sverka){S.diaryDone.sverka=true;S.sverka=true;}
+  if(p>=0.3&&!S.diaryDone.biso1){S.diaryDone.biso1=true;dropBiso(false);}
+  if(p>=0.7&&!S.diaryDone.biso2){S.diaryDone.biso2=true;dropBiso(false);}
+  if(p>=0.8&&!S.diaryDone.late){S.diaryDone.late=true;S.diaryQueue.push('revisor','master');}
+  busy=true;updateBar();
+  try{await doTurn();}catch(e){
+    addFeed('system','система','сбой','Ход сорвался: '+(e.message||e)+'. Пробуем следующий.');
+  }
+  busy=false;S.turnCount++;lastAct.turn=Date.now();save();updateBar();
+  if(S.phase==='run'&&!S.paused)scheduleTick();
+}
+
+async function doTurn(){
+  const agent=S.turn;
+  const a=AG(agent);
+  let instruction='',houseMode='brief',maxTok=1200,wasMeeting=false;
+
+  if(S.meeting>0){
+    wasMeeting=true;
+    instruction='Наблюдатель обратился к паре — см. последнее обращение НАБЛЮДАТЕЛЯ в ленте и протоколе. Это совещание: ответь ему лично ("реплика"), по существу, со своим характером. Если он ставит задачу или меняет курс — прими это в план и скажи, как это меняет твою работу.';
+  }
+  else if(S.pending&&agent==='revisor'){
+    houseMode='brief';maxTok=1000;
+    instruction='Есть ожидающее предложение Мастера — модуль «'+S.pending.module+'»'+(S.pending.remove?' (удаление)':'')+'. Дай "ревью" с verdict.\nМОТИВ: '+S.pending.text+'\nКОД МОДУЛЯ:\n```\n'+pendingCodeStr(S.pending)+'\n```';
+  }
+  else if(S.sverka&&agent==='revisor'){
+    S.sverka=false;
+    instruction='Контур анти-глюка. Перечитай УСТАВ и ПРОТОКОЛ и ответь "репликой" честно: дрейфует ли пара от цели срока? Если да — назови дрейф и как вернуться. Если нет — подтверди курс одним предложением.';
+  }
+  else if(S.diaryQueue[0]===agent){
+    S.diaryQueue.shift();maxTok=1000;
+    instruction='Система просит: напиши "дневник" — личная честная запись о происходящем и о напарнике.';
+  }
+  else if(S.feed.length<=1&&agent==='master'){
+    instruction='Первый ход сессии. Начни: короткая "планёрка" — что предлагаешь вырастить в сосуде за этот срок (учитывая устав), или сразу первое "предложение" дома, если цель очевидна. Помни: дом строится модулями и умеет помнить (L.store), говорить (L.log) и жить во времени (tick) — первый модуль задаст архитектуру.';
+    houseMode='full';maxTok=5000;
+  }
+  else if(S.feed.length<=2&&agent==='revisor'){
+    instruction='Ответь на планёрку: согласись, уточни или предложи своё — "реплика" или "планёрка". Зафиксируйте цель срока.';
+  }
+  else if(agent==='master'&&S.retryNote){
+    houseMode='full';maxTok=5000;
+    instruction=S.retryNote;S.retryNote=null;
+  }
+  else if(agent==='master'){
+    houseMode='full';maxTok=5000;
+    instruction=S.pending
+      ?'Твоё прошлое предложение ещё не отревьюено — не предлагай новое. "Реплика": поясни напарнику мотив или подумай вслух о следующем шаге.'
+      :'Твой свободный ход: "предложение" нового модуля дома (главное твоё оружие), "реплика" напарнику или "запрос" Наблюдателю, если чего-то не хватает. Если нужны свежие факты из сети — можешь поискать.';
+    if(S.biso&&!S.pending){instruction+=' В ленте висит непрожитая БИСОЦИАЦИЯ — пропусти через неё этот ход.';S.biso=false;}
+    if(S.sketch&&!S.pending)instruction+=' Висит ЭСКИЗ напарника (см. протокол) — воплоти его модулем или скажи, почему нет.';
+  }
+  else{
+    instruction='Твой свободный ход: "реплика" — вопрос, сомнение, наблюдение, сверка с уставом и временем; "эскиз" — заявка на орган, который стоит построить; или "запрос" Наблюдателю. Если нужны факты из сети — можешь поискать. Не пиши ревью без висящего предложения.';
+  }
+
+  const res=await callClaude(agent,buildUser(instruction,houseMode),{maxTok});
+  if(wasMeeting)S.meeting--;
+  res.searches.forEach(q=>{if(q)addFeed(agent,a.name,'поиск','⌕ искал в сети: '+q)});
+  const j=parseJSON(res.text);
+  if(!j){
+    const broken=/"(css|html|js|module)"/.test(res.text);
+    if(res.truncated&&broken){
+      S.retryCount=(S.retryCount||0)+1;
+      if(S.retryCount<=2){
+        S.retryNote='Твоё прошлое предложение ОБОРВАЛОСЬ лимитом. Переподай ТОТ ЖЕ модуль немедленно, вдвое компактнее: только ядро механики, 25-40 строк суммарно, без украшений. Дорастишь следующей версией.';
+        addFeed('system','система','сбой','Предложение оборвалось лимитом — ход не сгорает, строитель переподаёт компактнее ('+S.retryCount+'/2).');
+        return; // очередь НЕ переходит
+      }
+      addFeed('system','система','сбой','Третий обрыв подряд — модуль слишком велик. Ход переходит: разбейте орган на части.');
+      S.retryCount=0;
+    }
+    else addFeed(agent,a.name,'реплика',(broken?'(формат сломался, модуль не засчитан) ':'')+res.text.slice(0,500)||'(пустой ответ)');
+    advanceTurn();return;
+  }
+  S.retryCount=0;
+  const type=(j.type||'реплика').toLowerCase();
+
+  if(type==='предложение'&&agent==='master'&&j.module&&(j.css||j.html||j.js||j.remove)){
+    if(S.pending){
+      addFeed('master',a.name,'реплика',(j.text||'')+'\n(новое предложение отложено: предыдущее ещё не отревьюено)');
+    }else{
+      S.pending={module:String(j.module),css:j.css?String(j.css):'',html:j.html?String(j.html):'',js:j.js?String(j.js):'',libs:Array.isArray(j.libs)?j.libs.filter(l=>LIBS_CDN[l]):[],remove:!!j.remove,text:j.text||''};
+      if(S.sketch&&S.sketch.module===S.pending.module)S.sketch=null;
+      addFeed('master',a.name,'предложение',(S.pending.remove?'− «':'Модуль «')+S.pending.module+'»: '+(j.text||''),{mcode:pendingCodeStr(S.pending),v:S.house.v+1,module:S.pending.module});
+    }
+  }
+  else if(type==='ревью'&&agent==='revisor'&&S.pending){
+    const ok=(j.verdict||'').includes('прин');
+    const patched=ok&&(j.css||j.html||j.js);
+    if(patched){
+      if(j.css)S.pending.css=String(j.css);
+      if(j.html)S.pending.html=String(j.html);
+      if(j.js)S.pending.js=String(j.js);
+      S.pending.text+=' · правка ревизора';
+    }
+    addFeed('revisor',a.name,'ревью',j.text||'',{verdict:ok?(patched?'принять с правкой':'принять'):'отклонить'});
+    if(ok)applyPending();
+    else toHumus(S.pending.module,S.pending.text,'вето: '+String(j.text||'').slice(0,80),pendingCodeStr(S.pending));
+    S.pending=null;
+  }
+  else if(type==='эскиз'&&j.module){
+    S.sketch={module:String(j.module),text:String(j.text||'').slice(0,300),by:a.name};
+    addFeed(agent,a.name,'эскиз','✎ Эскиз органа «'+S.sketch.module+'»: '+S.sketch.text);
+  }
+  else if(type==='материал'&&j.name){
+    const m=libByName(j.name);
+    if(m){S.matFor={agent,name:m.name};addFeed(agent,a.name,'материал','≣ взял с полки: «'+m.name+'»'+(j.text?' — '+j.text:''));}
+    else addFeed(agent,a.name,'реплика','Искал на полке «'+j.name+'» — такого материала нет. '+(j.text||''));
+  }
+  else{
+    const kind=type==='планёрка'?'планёрка':type==='дневник'?'дневник':type==='запрос'?'запрос':'реплика';
+    addFeed(agent,a.name,kind,j.text||'');
+    if(kind==='запрос')toast('пара просит слова — открой Совещание');
+  }
+  advanceTurn();
+}
+function toHumus(module,note,cause,code){
+  S.house.humus.push({module,note:String(note||'').slice(0,110),cause,code:String(code||'').slice(0,400)});
+  while(S.house.humus.length>12)S.house.humus.shift();
+}
+function applyPending(){
+  S.house.v++;
+  if(S.pending.remove){
+    const m=S.house.modules[S.pending.module];
+    if(m)toHumus(S.pending.module,S.pending.text,'удалён парой',modCode(m));
+    delete S.house.modules[S.pending.module];
+  }
+  else S.house.modules[S.pending.module]={css:S.pending.css,html:S.pending.html,js:S.pending.js,libs:S.pending.libs||[],note:String(S.pending.text).slice(0,100),at:nowLabel()};
+  S.house.history.push({v:S.house.v,module:S.pending.module,note:(S.pending.remove?'удалён · ':'')+String(S.pending.text).slice(0,110),at:nowLabel(),code:pendingCodeStr(S.pending)});
+  if(S.house.history.length>20)S.house.history.shift();
+  addFeed('system','геном','дифф','v'+S.house.v+': модуль «'+S.pending.module+'» '+(S.pending.remove?'удалён из генома':'вошёл в геном')+'. Дом пересобран.');
+  refreshWorld();
+}
+function advanceTurn(){S.turn=S.turn==='master'?'revisor':'master'}
+
+/* ── финал: стоп-машина ── */
+function beginFinal(){
+  if(S.finalStep>0)return;
+  S.finalStep=1;
+  addFeed('system','система','стоп-машина','Срок вышел. Финальная последовательность: '+(S.pending?'ревью висящего предложения, ':'')+'два дневника и совместный акт сдачи.');
+  save();scheduleTick(1500);
+}
+async function finalTick(){
+  busy=true;updateBar();
+  try{
+    if(S.finalStep===1){
+      if(S.pending){
+        const r=await callClaude('revisor',buildUser('Срок вышел, но есть неотревьюенное предложение Мастера — модуль «'+S.pending.module+'» — оно не должно пропасть. Последнее "ревью" с verdict.\nМОТИВ: '+S.pending.text+'\nКОД МОДУЛЯ:\n```\n'+pendingCodeStr(S.pending)+'\n```','brief'),{search:false,maxTok:1000});
+        const j=parseJSON(r.text);
+        const ok=j&&j.verdict&&(j.verdict||'').includes('прин');
+        addFeed('revisor',AG('revisor').name,'ревью',(j&&j.text)||r.text.slice(0,500),{verdict:ok?'принять':'отклонить'});
+        if(ok)applyPending();
+        else toHumus(S.pending.module,S.pending.text,'вето на финале',pendingCodeStr(S.pending));
+        S.pending=null;
+      }
+      S.finalStep=2;
+    }else if(S.finalStep===2){
+      const r=await callClaude('master',buildUser('Срок вышел. Напиши финальный "дневник": что построили, что не успели, что думаешь о напарнике — честно.','brief'),{search:false,maxTok:1000});
+      addFeed('master',AG('master').name,'дневник',salvageText(r.text).slice(0,900));S.finalStep=3;
+    }else if(S.finalStep===3){
+      const r=await callClaude('revisor',buildUser('Срок вышел. Напиши финальный "дневник": оцени результат по существу, скажи правду о работе пары и о напарнике-строителе.','brief'),{search:false,maxTok:1000});
+      addFeed('revisor',AG('revisor').name,'дневник',salvageText(r.text).slice(0,900));S.finalStep=4;
+    }else if(S.finalStep===4){
+      const r=await callClaude('master',buildUser('Последний ход. Напиши совместный "акт" сдачи от лица пары: что выросло в сосуде (версия дома, суть вещи), чему научились, рекомендация наблюдателю. Уложись в объём — не перечисляй все органы, назови главные.','brief'),{search:false,maxTok:1600});
+      const act=salvageText(r.text).slice(0,1400);
+      addFeed('system','пара','акт',act);
+      S.phase='done';S.finalStep=5;
+      $('orb').classList.add('dead');
+      $('feed').classList.remove('live');
+      doneBar();
+      showAct(act);
+    }
+  }catch(e){addFeed('system','система','сбой','Финал споткнулся: '+(e.message||e)+'. Повтор.');}
+  busy=false;save();updateBar();
+  if(S.finalStep<5)scheduleTick(2500);
+}
+function showAct(act){
+  lastRevealCode=act;
+  $('revealCard').innerHTML=`
+    <div class="reveal-role"><span class="d" style="background:var(--acc)"></span><span class="n" style="color:var(--acc)">Акт сдачи</span></div>
+    <div class="reveal-ai">${esc(act)}</div>
+    <div class="chips" style="justify-content:center"><div class="chip" onclick="copyText(lastRevealCode,'акт скопирован')">⧉ копировать акт</div></div>
+    <div class="reveal-src">дом v${S.house.v} · ${fmtClock(S.budgetMin*60000)} · ${S.turnCount} ходов · ${fmtTok(tokNow())} токенов · ≈ ${fmtUsd(costNow())} · сосуд вскрыт</div>
+    <div class="reveal-hint">нажми чтобы закрыть</div>`;
+  $('reveal').classList.add('on');
+}
+
+/* ── просмотр ── */
+let lastRevealCode='';
+function showCode(i){
+  const e=S.feed[i];if(!e)return;
+  let code=e.mcode;
+  if(code==null){
+    const h=S.house.history.find(x=>x.v===e.v);
+    if(h)code=h.code;
+    else{toast('код этой версии ужат диетой памяти');return}
+  }
+  lastRevealCode=code;
+  $('revealCard').innerHTML=`
+    <div class="reveal-role"><span class="d" style="background:${AG('master').color}"></span><span class="n" style="color:${AG('master').color}">Модуль «${esc(e.module||'?')}» · v${e.v}</span></div>
+    <div class="reveal-title">${esc(e.text)}</div>
+    <pre class="code">${esc(code)}</pre>
+    <div class="chips" style="justify-content:center"><div class="chip" onclick="copyText(lastRevealCode,'модуль скопирован')">⧉ копировать модуль</div></div>
+    <div class="reveal-src">${code.split('\n').length} строк модуля</div>
+    <div class="reveal-hint">нажми чтобы закрыть</div>`;
+  $('reveal').classList.add('on');
+}
+function showModuleHist(idx){
+  const h=S.house.history[idx];if(!h)return;
+  lastRevealCode=h.code||'';
+  $('revealCard').innerHTML=`
+    <div class="reveal-role"><span class="d" style="background:var(--green)"></span><span class="n" style="color:var(--green)">Геном · v${h.v}</span></div>
+    <div class="reveal-title">Модуль «${esc(h.module)}» — ${esc(h.note)}</div>
+    <pre class="code">${esc(h.code||'—')}</pre>
+    <div class="chips" style="justify-content:center"><div class="chip" onclick="copyText(lastRevealCode,'модуль скопирован')">⧉ копировать модуль</div></div>
+    <div class="reveal-src">${esc(h.at)}</div>
+    <div class="reveal-hint">нажми чтобы закрыть</div>`;
+  $('reveal').classList.add('on');
+}
+function closeReveal(){$('reveal').classList.remove('on')}
+function renderHouse(){
+  const code=assembleHouse();
+  const n=Object.keys(S.house.modules).length;
+  $('houseSub').textContent=code?('версия v'+S.house.v+' · органов: '+n+' · живёт в iframe'):'версия 0 · дом ещё не построен';
+  $('houseFrame').srcdoc=code||'<body style="font-family:Georgia;font-style:italic;color:#A8A399;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">здесь вырастет дом</body>';
+}
+function renderGenome(){
+  $('genomeList').innerHTML=S.house.history.length
+    ?S.house.history.slice().reverse().map((h,ri)=>{const idx=S.house.history.length-1-ri;
+      return `<div class="vrow" onclick="closeSheet();showModuleHist(${idx})"><span class="vv">v${h.v}</span><span class="vt">«${esc(h.module)}» · ${esc(h.note)}</span><span class="vd">${esc(h.at)}</span></div>`}).join('')
+    :'<span style="color:var(--t3)">геном пуст — ни один модуль ещё не принят</span>';
+}
+const SHEETS=['shHouse','shGenome','shCharter','shMeet','shSettings','shOrgans','shShelf','shPair','shLib'];
+function openSheet(id){
+  $('overlay').classList.add('on');
+  SHEETS.forEach(s=>$(s).classList.remove('on'));
+  $(id).classList.add('on');
+  if(id==='shCharter')$('charterView').textContent=S?S.charter:$('fCharter').value;
+}
+function closeSheet(){$('overlay').classList.remove('on');SHEETS.forEach(s=>$(s).classList.remove('on'))}
+
+/* ── совещание, продление, выгрузка ── */
+function openMeet(){
+  $('extendChips').innerHTML=BUDGETS.map((b,i)=>`<div class="chip" onclick="extendBy(${i})">+ ${b.label.split(' ·')[0]}</div>`).join('');
+  openSheet('shMeet');
+}
+function sendMeet(){
+  const t=$('meetText').value.trim();
+  if(!t){toast('обращение пустое');return}
+  if(!S){toast('сначала запаяй сосуд');return}
+  $('meetText').value='';closeSheet();
+  addFeed('observer','НАБЛЮДАТЕЛЬ','обращение',t);
+  S.meeting=2;
+  if(S.phase==='done')toast('сосуд вскрыт — продли срок, чтобы они ответили');
+  else if(S.paused)toast('передано · сними с паузы');
+  else scheduleTick(1200);
+  save();
+}
+function extendBy(i){
+  if(!S){toast('сначала запаяй сосуд');return}
+  const b=BUDGETS[i];
+  // продление = добавка К ТЕКУЩЕМУ МОМЕНТУ: если прожито больше бюджета, база — прожитое
+  const elapsedMin=Math.ceil(S.elapsedMs/60000);
+  S.budgetMin=Math.max(S.budgetMin,elapsedMin)+b.min;
+  S.maxTurns=Math.max(S.maxTurns,S.turnCount+4)+b.turns;
+  const lbl=b.label.split(' ·')[0];
+  if(S.phase==='done'||S.finalStep>0){
+    S.phase='run';S.finalStep=0;S.diaryDone={};S.paused=false;S.pending=null;
+    resumeClockAnchor();
+    switchToRun();
+    addFeed('system','система','продление','Наблюдатель продлил срок: +'+lbl+'. Второй срок — сосуд остаётся запаянным, память ленты жива.');
+  }else{
+    addFeed('system','система','продление','Наблюдатель продлил срок: +'+lbl+'.');
+  }
+  closeSheet();save();updateBar();scheduleTick(1500);
+}
+function downloadText(name,content,mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime||'text/plain;charset=utf-8'}));
+  a.download=name;document.body.appendChild(a);a.click();a.remove();
+}
+function exportChron(){
+  if(!S||!S.feed.length){toast('хроника пуста');return}
+  const md=['# Латимер · хроника сессии','',
+    'Срок: '+fmtClock(S.budgetMin*60000)+' · ходов: '+S.turnCount+' · дом: v'+S.house.v+' · токены: '+fmtTok(tokNow())+' · стоимость: ≈ '+fmtUsd(costNow()),''];
+  md.push('## Устав','',S.charter,'','## Лента','');
+  S.feed.forEach(e=>md.push('**['+e.at+'] '+e.tag+' · '+e.kind+'**'+(e.verdict?' → '+e.verdict:''),'',e.text,''));
+  downloadText('latimer-chronicle.md',md.join('\n'),'text/markdown;charset=utf-8');
+  toast('хроника выгружена');
+}
+function exportHouse(){
+  const code=S?assembleHouse():'';
+  if(!code){toast('дом ещё не построен');return}
+  downloadText('latimer-house-v'+S.house.v+'.html',code,'text/html;charset=utf-8');
+  toast('дом выгружен · v'+S.house.v);
+}
+
+/* ── паспорт и органы ── */
+function passportFull(){
+  return PASSPORT
+    +'\n\nКАРТА ОРГАНОВ\n'+ORGAN_MAP.map(o=>'- '+o[0]+': '+o[1]).join('\n')
+    +'\n\nЖУРНАЛ ОРГАНОВ\n'+ORGAN_LOG.map(l=>'- '+l[0]+' · '+l[1]+' · '+l[2]).join('\n');
+}
+function showPassport(){
+  closeSheet();
+  $('revealCard').innerHTML=`
+    <div class="reveal-role"><span class="d" style="background:var(--violet)"></span><span class="n" style="color:var(--violet)">Паспорт проекта</span></div>
+    <pre class="code" style="max-height:58vh;white-space:pre-wrap">${esc(passportFull())}</pre>
+    <div class="reveal-src">живёт в коде · органов: ${ORGAN_MAP.length} · записей в журнале: ${ORGAN_LOG.length}</div>
+    <div class="reveal-hint">нажми чтобы закрыть</div>`;
+  $('reveal').classList.add('on');
+}
+function copyPassport(){
+  const t=passportFull();
+  const done=()=>toast('паспорт скопирован — вставь в новый чат');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,done));
+  else fallbackCopy(t,done);
+}
+function copyText(t,msg){
+  const done=()=>toast(msg||'скопировано');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,done));
+  else fallbackCopy(t,done);
+}
+function fallbackCopy(t,done){
+  const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done()}catch(e){toast('не удалось скопировать')}
+  ta.remove();
+}
+function organBrief(i){
+  const o=ORGAN_MAP[i];
+  return 'Проект «Латимер», работаем по паспорту (ниже). Ты — чат органа «'+o[0]+'» ('+o[1]+'). Актуальный index.html прилагаю следующим сообщением. Задание: [опиши задачу]. Ядро и чужие органы не трогать; сдача патчем + строка в ORGAN_LOG + самопроверка с рисками.\n\n'+passportFull();
+}
+function openOrgan(i){
+  const t=organBrief(i);
+  const starter='Проект «Латимер», чат органа «'+ORGAN_MAP[i][0]+'» ('+ORGAN_MAP[i][1]+'). Полный паспорт-бриф вставлю из буфера следующим сообщением и приложу актуальный index.html. Задание: ';
+  const url='https://claude.ai/new?q='+encodeURIComponent(starter);
+  const done=()=>{toast('бриф «'+ORGAN_MAP[i][0]+'» в буфере — вставь в чат');setTimeout(()=>window.open(url,'_blank'),350)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,done));
+  else fallbackCopy(t,done);
+}
+function renderOrgans(){
+  $('organRows').innerHTML=ORGAN_MAP.map((o,i)=>
+    `<div class="vrow" onclick="openOrgan(${i})"><span class="vv">❖</span><span class="vt"><b style="font-weight:500">${esc(o[0])}</b><br><span style="color:var(--t3);font-size:12px">${esc(o[1])}</span></span><span class="vd">чат ↗</span></div>`).join('');
+  $('organLog').innerHTML=ORGAN_LOG.map(l=>esc(l[0])+' · '+esc(l[1])+' — '+esc(l[2])).join('<br>');
+}
+function reset(){
+  if(S&&S.feed&&S.feed.length)archSave(S);
+  localStorage.removeItem(LSKEY);location.reload();
+}
+
+/* ── бэкап: шар + полка + субличности ── */
+function backupAll(){
+  const pack={latimer:2,exported:Date.now(),state:S,shelf:archList(),personas:persLib(),library:libList()};
+  const d=new Date();
+  const name='latimer2-backup-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'.json';
+  downloadText(name,JSON.stringify(pack),'application/json;charset=utf-8');
+  toast('бэкап выгружен');
+}
+function restoreBackup(inp){
+  const f=inp.files&&inp.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const pack=JSON.parse(rd.result);
+      if(pack.latimer!==2)throw new Error('это не бэкап Латимера 2');
+      if(pack.state)localStorage.setItem(LSKEY,JSON.stringify(pack.state));else localStorage.removeItem(LSKEY);
+      if(pack.shelf)localStorage.setItem(LSARCH,JSON.stringify(pack.shelf));
+      if(pack.personas)localStorage.setItem(LSPERS,JSON.stringify(pack.personas));
+      if(pack.library)localStorage.setItem(LSLIB,JSON.stringify(pack.library));
+      location.reload();
+    }catch(e){toast('бэкап не прочитался: '+(e.message||e))}
+  };
+  rd.readAsText(f);inp.value='';
+}
+async function getSelfSrc(){
+  let src='';
+  try{const r=await fetch(location.href,{cache:'no-store'});if(r.ok)src=await r.text();}catch(e){}
+  if(!src||src.length<5000)src='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  // вычищаем прежнее семя (копия копии не должна тащить два мира)
+  return src.replace(/<script id="seed">[\s\S]*?<\/script>/,'');
+}
+async function downloadSelf(live){
+  let src=await getSelfSrc();
+  if(live){
+    const pack={latimer:2,exported:Date.now(),state:S,shelf:archList(),personas:persLib(),library:libList()};
+    const seed='<scr'+'ipt id="seed">window.__LATIMER_SEED__='+JSON.stringify(pack).replace(/</g,'\\u003c')+'</scr'+'ipt>';
+    if(src.includes('<!--SEED-->'))src=src.replace('<!--SEED-->',seed+'\n<!--SEED-->');
+    else src=src.replace('</body>',seed+'\n</body>');
+    downloadText('latimer2-live.html',src,'text/html;charset=utf-8');
+    toast('живая копия выгружена — мир внутри');
+  }else{
+    downloadText('latimer2-copy.html',src,'text/html;charset=utf-8');
+    toast('чистая программа выгружена');
+  }
+}
+
+/* ── субличности: UI ── */
+const ED_COLORS=['#C68A2E','#2C6FB0','#7B6BB0','#3A8E94','#3C9A6A','#C0566C'];
+let edColor=ED_COLORS[0],pairSlot='master';
+function renderPairChips(){
+  const el=$('pairChips');if(!el)return;
+  const m=personaById(slotSel.master),r=personaById(slotSel.revisor);
+  el.innerHTML=
+    `<div class="chip" onclick="openPair('master')" style="border-color:${m.color};color:${m.color}">${m.ic} строитель · ${esc(m.name)}</div>`+
+    `<div class="chip" onclick="openPair('revisor')" style="border-color:${r.color};color:${r.color}">${r.ic} ревизор · ${esc(r.name)}</div>`;
+}
+function openPair(slot){
+  if(S){toast('пара запаяна — read-only до нового шара');return}
+  pairSlot=slot;
+  $('pairSub').textContent='выбор в слот: '+(slot==='master'?'строитель':'ревизор (вето)');
+  renderPersRows();persClear();
+  openSheet('shPair');
+}
+function renderPersRows(){
+  const lib=persLib();
+  $('persRows').innerHTML=allPersonas().map(x=>{
+    const cur=slotSel[pairSlot]===x.id?' · в слоте':'';
+    const custom=lib.some(l=>l.id===x.id);
+    const acts=custom?`<span class="vd" onclick="event.stopPropagation();persEdit('${x.id}')" style="cursor:pointer">✎</span><span class="vd" onclick="event.stopPropagation();persDelete('${x.id}')" style="color:var(--rose);cursor:pointer">✕</span>`:`<span class="vd">пресет</span>`;
+    return `<div class="vrow" onclick="persAssign('${x.id}')"><span class="vv" style="color:${x.color}">${x.ic}</span><span class="vt"><b style="font-weight:500;color:${x.color}">${esc(x.name)}</b>${cur}<br><span style="color:var(--t3);font-size:12px">${esc(x.sys.slice(0,90))}…</span></span>${acts}</div>`;
+  }).join('');
+}
+function persAssign(id){
+  slotSel[pairSlot]=id;
+  if(slotSel.master===slotSel.revisor)toast('одна субличность в обоих слотах — зеркальная пара, смело');
+  renderPersRows();renderPairChips();
+}
+function renderEdColors(){
+  $('edColors').innerHTML=ED_COLORS.map(c=>`<div class="chip${c===edColor?' on':''}" onclick="edColor='${c}';renderEdColors()" style="background:${c===edColor?c:'transparent'};border-color:${c};color:${c===edColor?'#fff':c}">●</div>`).join('');
+}
+function persClear(){
+  $('edId').value='';$('edName').value='';$('edIc').value='';$('edSys').value='';
+  edColor=ED_COLORS[0];renderEdColors();
+  $('edTitle').textContent='Редактор · новая субличность';
+}
+function persEdit(id){
+  const x=persLib().find(l=>l.id===id);if(!x)return;
+  $('edId').value=x.id;$('edName').value=x.name;$('edIc').value=x.ic;$('edSys').value=x.sys;
+  edColor=x.color;renderEdColors();
+  $('edTitle').textContent='Редактор · '+x.name;
+}
+function persSave(){
+  const name=$('edName').value.trim().toUpperCase().slice(0,14);
+  const ic=($('edIc').value.trim()||'✳').slice(0,2);
+  const sys=$('edSys').value.trim();
+  if(!name||!sys){toast('нужны имя и характер');return}
+  const lib=persLib();
+  let id=$('edId').value;
+  if(id){const i=lib.findIndex(l=>l.id===id);if(i>=0)lib[i]={id,name,ic,color:edColor,sys};}
+  else{id='u'+Date.now();lib.push({id,name,ic,color:edColor,sys});}
+  persWrite(lib);persClear();renderPersRows();renderPairChips();
+  toast('субличность «'+name+'» в библиотеке');
+}
+function persDelete(id){
+  if(slotSel.master===id)slotSel.master='мастер';
+  if(slotSel.revisor===id)slotSel.revisor='ревизор';
+  persWrite(persLib().filter(l=>l.id!==id));
+  renderPersRows();renderPairChips();
+  toast('субличность удалена');
+}
+
+/* ── header actions ── */
+$('hdrActions').insertAdjacentHTML('beforeend',
+  `<button class="ibtn" onclick="openSheet('shCharter')" aria-label="Устав" title="Устав">§</button>
+   <button class="ibtn" onclick="if(S){openSheet('shGenome');renderGenome()}" aria-label="Геном" title="Геном">▤</button>
+   <button class="ibtn" onclick="renderLib();openSheet('shLib')" aria-label="Библиотека" title="Библиотека">≣</button>
+   <button class="ibtn" onclick="renderOrgans();openSheet('shOrgans')" aria-label="Органы" title="Органы">❖</button>
+   <button class="ibtn" onclick="$('fKey').value=getKey();$('settingsSub').textContent='ядро '+BUILD+' · ключ хранится только на этом устройстве';openSheet('shSettings')" aria-label="Настройки" title="Настройки">⚿</button>`);
+
+/* ── возобновление ── */
+(function boot(){
+  document.querySelector('.hdr-eyebrow').textContent='Латимер × производство · '+BUILD;
+  console.log('Пульт ·',BUILD);
+  // спора: живая копия прорастает, только если здесь ещё нет жизни
+  try{
+    if(window.__LATIMER_SEED__){
+      const sd=window.__LATIMER_SEED__;
+      if(!localStorage.getItem(LSKEY)&&sd.latimer===2){
+        if(sd.state)localStorage.setItem(LSKEY,JSON.stringify(sd.state));
+        if(sd.shelf)localStorage.setItem(LSARCH,JSON.stringify(sd.shelf));
+        if(sd.personas)localStorage.setItem(LSPERS,JSON.stringify(sd.personas));
+        if(sd.library)localStorage.setItem(LSLIB,JSON.stringify(sd.library));
+        toast('спора проросла — мир восстановлен из живой копии');
+      }else if(localStorage.getItem(LSKEY)){
+        toast('здесь уже есть жизнь — семя копии не проросло');
+      }
+    }
+  }catch(e){}
+  $('fCharter').value=DEFAULT_CHARTER;
+  renderBudget();
+  const prev=load();
+  if(prev&&(prev.phase==='run'||prev.phase==='done')){
+    S=prev;
+    S.usage=S.usage||blankUsage();
+    S.voices=S.voices||0;
+    if(!S.agents)S.agents={master:JSON.parse(JSON.stringify(PRESETS[0])),revisor:JSON.parse(JSON.stringify(PRESETS[1]))};
+    if(S.house&&S.house.modules===undefined){
+      const old=S.house.code||'';
+      S.house={v:S.house.v||0,modules:{},history:[],data:{},humus:[]};
+      if(old)S.house.modules['наследие']={raw:old,note:'дом старого формата (полный документ)',at:'—'};
+      S.pending=null;
+    }
+    S.house.data=S.house.data||{};
+    S.house.humus=S.house.humus||[];
+    switchToRun();
+    if(S.phase==='done'){
+      $('orb').classList.add('dead');
+      $('feed').classList.remove('live');
+      doneBar();
+    }else{
+      S.paused=true;
+      const bp=$('btnPause');if(bp)bp.textContent='▶';
+      $('orb').classList.add('dead');
+      $('feed').classList.remove('live');
+      addFeed('system','система','пробуждение','Окно открыли снова. Жизнь была на паузе — нажми «▶», чтобы продолжить срок.');
+    }
+    updateBar();
+  }else{
+    renderSetupShelf();
+    renderPairChips();
+  }
+  // микрокосм: раскрыт на десктопе всегда; на мобиле — как оставили
+  let open='1';
+  try{open=localStorage.getItem('pult_world_open')||'1'}catch(e){}
+  if(window.innerWidth>=1000||open==='1'){$('world').classList.remove('closed');$('worldToggle').textContent='▴';}
+  startClock();
+  seedLibrary();
+  let lastScY=window.scrollY;
+  window.addEventListener('scroll',()=>{
+    const y=window.scrollY;
+    if(y>420&&y<lastScY-4)$('tophdr').classList.add('on');
+    else if(y>lastScY+4||y<=420)$('tophdr').classList.remove('on');
+    lastScY=y;
+  },{passive:true});
+  if('serviceWorker' in navigator&&location.protocol==='https:'){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+})();
+</script>
+<!--SEED-->
+</body>
+</html>
